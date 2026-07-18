@@ -1,0 +1,7 @@
+.field { display: flex; flex-direction: column; gap: var(--space-2); }
+.input {
+  height: 2.75rem; padding: 0 var(--space-4); border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-foreground);
+
+  &:focus-visible { outline: none; border-color: var(--color-ring); }
+}

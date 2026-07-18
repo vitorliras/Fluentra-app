@@ -1,0 +1,8 @@
+<div class="notification-center" aria-live="polite" role="status">
+  @for (item of notification.queue(); track item.id) {
+    <div class="notification-center__item" [attr.data-tone]="item.tone">
+      <span>{{ item.message }}</span>
+      <button type="button" (click)="notification.dismiss(item.id)" aria-label="Fechar">×</button>
+    </div>
+  }
+</div>
