@@ -1,0 +1,60 @@
+<form class="login-form" [formGroup]="form.group" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label class="login-form__label" for="login-identifier">E-mail ou username</label>
+    <input
+      id="login-identifier"
+      class="input"
+      type="text"
+      formControlName="identifier"
+      autocomplete="username"
+      placeholder="seu@email.com ou seu_username"
+    />
+    @if (form.group.get('identifier')?.invalid && form.group.get('identifier')?.touched) {
+      <span class="login-form__error">Informe seu e-mail ou username.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="login-form__label" for="login-password">Senha</label>
+    <div class="login-form__password-wrapper">
+      <input
+        id="login-password"
+        class="input"
+        type="text"
+        [appPasswordMask]="showPassword()"
+        formControlName="password"
+        autocomplete="current-password"
+        placeholder="Sua senha"
+      />
+      <button
+        type="button"
+        class="login-form__toggle-password"
+        (click)="showPassword.set(!showPassword())"
+        [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+      >
+        @if (showPassword()) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-10-8-10-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+            <path d="M1 1l22 22" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s3-8 11-8 11 8 11 8-3 8-11 8-11-8-11-8Z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        }
+      </button>
+    </div>
+    @if (form.group.get('password')?.invalid && form.group.get('password')?.touched) {
+      <span class="login-form__error">Informe sua senha.</span>
+    }
+  </div>
+
+  <button type="submit" class="btn login-form__submit" [disabled]="isSubmitting()">
+    {{ isSubmitting() ? 'Entrando...' : 'Entrar' }}
+  </button>
+
+  <p class="login-form__switch">
+    Ainda não tem conta? <a routerLink="/cadastro">Criar conta</a>
+  </p>
+</form>

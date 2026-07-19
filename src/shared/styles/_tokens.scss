@@ -43,3 +43,21 @@
   --color-destructive: var(--red-600);
   --color-ring: var(--brand-600);
 }
+
+// Modo escuro — alternado via atributo `data-theme` em <html> (ver core/services/theme.service.ts).
+// Paleta escolhida para combinar com a imagem de fundo do Fluentra (indigo/navy escuro),
+// não um cinza genérico — só os tokens semânticos mudam, a camada primitiva/marca é a mesma.
+:root[data-theme='dark'] {
+  --color-background: #0f0b1f;
+  --color-surface: #171330;
+  --color-foreground: #f4f2fa;
+  --color-foreground-muted: #a79fc4;
+  --color-border: #2c2650;
+  --color-secondary: #221c42;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-destructive: #f87171;
+  --color-ring: var(--brand-400);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 24px -8px rgb(0 0 0 / 0.5);
+}

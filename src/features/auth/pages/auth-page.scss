@@ -1,0 +1,79 @@
+// Layout de duas colunas compartilhado por Login e Cadastro. No mobile, o painel de
+// marca (imagem de fundo) desaparece — só o formulário fica, tela cheia (conteúdo
+// essencial primeiro no mobile, ver 04-cross-cutting/frontend/01-cross-cutting.md#performance).
+:host {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  min-height: 100dvh;
+  background: var(--color-background);
+}
+
+.auth-page__hero {
+  display: block;
+}
+
+.auth-page__panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+.auth-page__theme-toggle {
+  position: absolute;
+  top: var(--space-6);
+  right: var(--space-6);
+}
+
+.auth-page__card {
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.auth-page__card-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-lg);
+  object-fit: contain;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  align-self: center;
+}
+
+.auth-page__heading {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.auth-page__title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+.auth-page__subtitle {
+  margin: 0;
+  color: var(--color-foreground-muted);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 1023px) {
+  :host {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-page__hero {
+    display: none;
+  }
+
+  .auth-page__panel {
+    padding: var(--space-6);
+  }
+}
