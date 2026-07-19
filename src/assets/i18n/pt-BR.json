@@ -1,0 +1,77 @@
+{
+  "theme": {
+    "activateLight": "Ativar modo claro",
+    "activateDark": "Ativar modo escuro"
+  },
+  "language": {
+    "label": "Idioma",
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français"
+  },
+  "hero": {
+    "headlineLine1": "Pare de traduzir.",
+    "headlineLine2": "Comece a falar.",
+    "subtitle": "Prática diária de fala em inglês com shadowing, repetição espaçada e o mesmo mecanismo de hábito que mantém sequências de centenas de dias — sem gramática decorada, sem mensalidade.",
+    "pillars": {
+      "shadowingTitle": "Shadowing com vídeos reais",
+      "shadowingDescription": "Pratique com conteúdo que você escolhe, não frases genéricas de livro.",
+      "spacedRepetitionTitle": "Repetição espaçada",
+      "spacedRepetitionDescription": "Revisa no momento certo, antes de esquecer — sem flashcard feito na mão.",
+      "streakTitle": "Sequência diária",
+      "streakDescription": "O mesmo motor de hábito do Duolingo, agora treinando o que realmente trava: falar."
+    },
+    "ceoQuote": "\"Criei o Fluentra porque cansei de entender inglês perfeitamente e travar na hora de falar. Se resolver isso pra mim, já valeu.\"",
+    "ceoName": "Vitor Lira",
+    "ceoRole": "Fundador & CEO"
+  },
+  "auth": {
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha",
+    "login": {
+      "title": "Bem-vindo de volta!",
+      "subtitle": "Faça login para continuar seus estudos",
+      "identifierLabel": "E-mail ou username",
+      "identifierPlaceholder": "seu@email.com ou seu_username",
+      "identifierError": "Informe seu e-mail ou username.",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Sua senha",
+      "passwordError": "Informe sua senha.",
+      "submit": "Entrar",
+      "submitting": "Entrando...",
+      "switchText": "Ainda não tem conta?",
+      "switchLink": "Criar conta",
+      "welcomeBack": "Bem-vindo de volta, {name}!"
+    },
+    "register": {
+      "title": "Crie sua conta",
+      "subtitle": "Comece a treinar sua fala em inglês hoje",
+      "nameLabel": "Nome",
+      "namePlaceholder": "Seu nome",
+      "nameError": "Informe seu nome.",
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "seu_username",
+      "usernameError": "Informe um username (até 30 caracteres, sem espaço).",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "seu@email.com",
+      "emailError": "Informe um e-mail válido.",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Mínimo 8 caracteres",
+      "passwordError": "Mínimo 8 caracteres, com pelo menos 1 número e 1 caractere especial.",
+      "passwordHelper": "Mínimo 8 caracteres, com 1 número e 1 caractere especial.",
+      "submit": "Criar conta",
+      "submitting": "Criando conta...",
+      "switchText": "Já tem conta?",
+      "switchLink": "Entrar",
+      "success": "Conta criada! Agora é só entrar."
+    },
+    "errors": {
+      "invalidCredentials": "E-mail/username ou senha incorretos.",
+      "loginUnexpected": "Não foi possível entrar. Tente novamente.",
+      "emailAlreadyExists": "Já existe uma conta com esse e-mail.",
+      "usernameAlreadyExists": "Esse username já está em uso.",
+      "registerUnexpected": "Não foi possível criar a conta. Verifique os dados e tente de novo."
+    }
+  }
+}

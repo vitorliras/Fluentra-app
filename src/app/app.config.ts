@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from '../core/interceptors/auth.interceptor';
 import { errorInterceptor } from '../core/interceptors/error.interceptor';
 import { ConfigService } from '../core/services/config.service';
+import { LanguageService } from '../core/services/language.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,7 +14,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideAppInitializer(async () => {
       const config = inject(ConfigService);
-      await config.load();
+      const language = inject(LanguageService);
+      await Promise.all([config.load(), language.load()]);
     }),
   ],
 };

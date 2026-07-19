@@ -1,0 +1,77 @@
+{
+  "theme": {
+    "activateLight": "Activate light mode",
+    "activateDark": "Activate dark mode"
+  },
+  "language": {
+    "label": "Language",
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français"
+  },
+  "hero": {
+    "headlineLine1": "Stop translating.",
+    "headlineLine2": "Start speaking.",
+    "subtitle": "Daily English speaking practice with shadowing, spaced repetition, and the same habit engine that keeps hundred-day streaks alive — no memorized grammar, no subscription.",
+    "pillars": {
+      "shadowingTitle": "Shadowing with real videos",
+      "shadowingDescription": "Practice with content you choose, not generic textbook sentences.",
+      "spacedRepetitionTitle": "Spaced repetition",
+      "spacedRepetitionDescription": "Reviews at the right moment, before you forget — no hand-made flashcards.",
+      "streakTitle": "Daily streak",
+      "streakDescription": "The same habit engine as Duolingo, now training what actually gets stuck: speaking."
+    },
+    "ceoQuote": "\"I built Fluentra because I got tired of understanding English perfectly and freezing up when I had to speak. If it fixes that for me, it was already worth it.\"",
+    "ceoName": "Vitor Lira",
+    "ceoRole": "Founder & CEO"
+  },
+  "auth": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "login": {
+      "title": "Welcome back!",
+      "subtitle": "Log in to keep studying",
+      "identifierLabel": "Email or username",
+      "identifierPlaceholder": "you@email.com or your_username",
+      "identifierError": "Enter your email or username.",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Your password",
+      "passwordError": "Enter your password.",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "switchText": "Don't have an account yet?",
+      "switchLink": "Create account",
+      "welcomeBack": "Welcome back, {name}!"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start training your English speaking today",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your name",
+      "nameError": "Enter your name.",
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "your_username",
+      "usernameError": "Enter a username (up to 30 characters, no spaces).",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@email.com",
+      "emailError": "Enter a valid email.",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "passwordError": "At least 8 characters, with 1 number and 1 special character.",
+      "passwordHelper": "At least 8 characters, with 1 number and 1 special character.",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "switchText": "Already have an account?",
+      "switchLink": "Log in",
+      "success": "Account created! Now just log in."
+    },
+    "errors": {
+      "invalidCredentials": "Incorrect email/username or password.",
+      "loginUnexpected": "Couldn't log in. Please try again.",
+      "emailAlreadyExists": "An account with this email already exists.",
+      "usernameAlreadyExists": "This username is already taken.",
+      "registerUnexpected": "Couldn't create the account. Check your details and try again."
+    }
+  }
+}

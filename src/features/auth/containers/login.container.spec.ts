@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { LanguageService } from '../../../core/services/language.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { SessionService } from '../../../core/services/session.service';
 import { Result } from '../../../shared/results/result';
@@ -10,9 +11,17 @@ import { AuthGateway } from '../data-access/auth.gateway';
 import { Session } from '../data-access/models/session.model';
 import { LoginContainer } from './login.container';
 
+// Fake devolve a própria chave — o Container só precisa escolher a chave certa;
+// o conteúdo traduzido de fato é responsabilidade dos dicionários JSON, não do Container.
+const fakeLanguageService = { t: (key: string) => key };
+
 function createContainer(gateway: Partial<AuthGateway>) {
   TestBed.configureTestingModule({
-    providers: [provideRouter([]), { provide: AuthGateway, useValue: gateway }],
+    providers: [
+      provideRouter([]),
+      { provide: AuthGateway, useValue: gateway },
+      { provide: LanguageService, useValue: fakeLanguageService },
+    ],
   });
 
   return TestBed.createComponent(LoginContainer).componentInstance;
@@ -52,7 +61,7 @@ describe('LoginContainer', () => {
     expect(sessionService.token()).toBeNull();
     const lastNotification = notification.queue().at(-1);
     expect(lastNotification?.tone).toBe('error');
-    expect(lastNotification?.message).toBe('E-mail/username ou senha incorretos.');
+    expect(lastNotification?.message).toBe('auth.errors.invalidCredentials');
   });
 
   it('should not call the gateway when the form is invalid', () => {

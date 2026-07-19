@@ -1,0 +1,31 @@
+<div class="language-selector">
+  <button
+    type="button"
+    class="language-selector__trigger"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-label]="languageService.t('language.label')"
+  >
+    {{ shortCode(languageService.language()) }}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  </button>
+
+  @if (isOpen()) {
+    <ul class="language-selector__menu" role="listbox">
+      @for (language of languages; track language) {
+        <li>
+          <button
+            type="button"
+            class="language-selector__option"
+            [class.language-selector__option--active]="language === languageService.language()"
+            (click)="select(language)"
+          >
+            {{ languageService.t('language.' + language) }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>

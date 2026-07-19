@@ -1,30 +1,51 @@
 <form class="login-form" [formGroup]="form.group" (ngSubmit)="submit()" novalidate>
   <div class="field">
-    <label class="login-form__label" for="register-name">Nome</label>
-    <input id="register-name" class="input" type="text" formControlName="name" autocomplete="name" placeholder="Seu nome" />
+    <label class="login-form__label" for="register-name">{{ languageService.t('auth.register.nameLabel') }}</label>
+    <input
+      id="register-name"
+      class="input"
+      type="text"
+      formControlName="name"
+      autocomplete="name"
+      [placeholder]="languageService.t('auth.register.namePlaceholder')"
+    />
     @if (form.group.get('name')?.invalid && form.group.get('name')?.touched) {
-      <span class="login-form__error">Informe seu nome.</span>
+      <span class="login-form__error">{{ languageService.t('auth.register.nameError') }}</span>
     }
   </div>
 
   <div class="field">
-    <label class="login-form__label" for="register-username">Username</label>
-    <input id="register-username" class="input" type="text" formControlName="username" autocomplete="username" placeholder="seu_username" />
+    <label class="login-form__label" for="register-username">{{ languageService.t('auth.register.usernameLabel') }}</label>
+    <input
+      id="register-username"
+      class="input"
+      type="text"
+      formControlName="username"
+      autocomplete="username"
+      [placeholder]="languageService.t('auth.register.usernamePlaceholder')"
+    />
     @if (form.group.get('username')?.invalid && form.group.get('username')?.touched) {
-      <span class="login-form__error">Informe um username (até 30 caracteres, sem espaço).</span>
+      <span class="login-form__error">{{ languageService.t('auth.register.usernameError') }}</span>
     }
   </div>
 
   <div class="field">
-    <label class="login-form__label" for="register-email">E-mail</label>
-    <input id="register-email" class="input" type="email" formControlName="email" autocomplete="email" placeholder="seu@email.com" />
+    <label class="login-form__label" for="register-email">{{ languageService.t('auth.register.emailLabel') }}</label>
+    <input
+      id="register-email"
+      class="input"
+      type="email"
+      formControlName="email"
+      autocomplete="email"
+      [placeholder]="languageService.t('auth.register.emailPlaceholder')"
+    />
     @if (form.group.get('email')?.invalid && form.group.get('email')?.touched) {
-      <span class="login-form__error">Informe um e-mail válido.</span>
+      <span class="login-form__error">{{ languageService.t('auth.register.emailError') }}</span>
     }
   </div>
 
   <div class="field">
-    <label class="login-form__label" for="register-password">Senha</label>
+    <label class="login-form__label" for="register-password">{{ languageService.t('auth.register.passwordLabel') }}</label>
     <div class="login-form__password-wrapper">
       <input
         id="register-password"
@@ -33,13 +54,13 @@
         [appPasswordMask]="showPassword()"
         formControlName="password"
         autocomplete="new-password"
-        placeholder="Mínimo 8 caracteres"
+        [placeholder]="languageService.t('auth.register.passwordPlaceholder')"
       />
       <button
         type="button"
         class="login-form__toggle-password"
         (click)="showPassword.set(!showPassword())"
-        [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+        [attr.aria-label]="showPassword() ? languageService.t('auth.hidePassword') : languageService.t('auth.showPassword')"
       >
         @if (showPassword()) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -54,16 +75,23 @@
         }
       </button>
     </div>
+    @if (form.group.get('password')?.value) {
+      <div class="password-strength" [attr.data-strength]="passwordStrength()">
+        <span></span><span></span><span></span>
+      </div>
+    }
     @if (form.group.get('password')?.invalid && form.group.get('password')?.touched) {
-      <span class="login-form__error">Mínimo 8 caracteres, com pelo menos 1 número e 1 caractere especial.</span>
+      <span class="login-form__error">{{ languageService.t('auth.register.passwordError') }}</span>
+    } @else {
+      <span class="login-form__helper">{{ languageService.t('auth.register.passwordHelper') }}</span>
     }
   </div>
 
   <button type="submit" class="btn login-form__submit" [disabled]="isSubmitting()">
-    {{ isSubmitting() ? 'Criando conta...' : 'Criar conta' }}
+    {{ isSubmitting() ? languageService.t('auth.register.submitting') : languageService.t('auth.register.submit') }}
   </button>
 
   <p class="login-form__switch">
-    Já tem conta? <a routerLink="/login">Entrar</a>
+    {{ languageService.t('auth.register.switchText') }} <a routerLink="/login">{{ languageService.t('auth.register.switchLink') }}</a>
   </p>
 </form>

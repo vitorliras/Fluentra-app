@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { LanguageService } from '../../services/language.service';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
@@ -9,4 +10,5 @@ import { ThemeService } from '../../services/theme.service';
 })
 export class ThemeToggleComponent {
   protected readonly themeService = inject(ThemeService);
+  protected readonly languageService = inject(LanguageService);
 }

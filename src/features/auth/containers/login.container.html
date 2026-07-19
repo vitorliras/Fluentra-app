@@ -1,21 +1,21 @@
 <form class="login-form" [formGroup]="form.group" (ngSubmit)="submit()" novalidate>
   <div class="field">
-    <label class="login-form__label" for="login-identifier">E-mail ou username</label>
+    <label class="login-form__label" for="login-identifier">{{ languageService.t('auth.login.identifierLabel') }}</label>
     <input
       id="login-identifier"
       class="input"
       type="text"
       formControlName="identifier"
       autocomplete="username"
-      placeholder="seu@email.com ou seu_username"
+      [placeholder]="languageService.t('auth.login.identifierPlaceholder')"
     />
     @if (form.group.get('identifier')?.invalid && form.group.get('identifier')?.touched) {
-      <span class="login-form__error">Informe seu e-mail ou username.</span>
+      <span class="login-form__error">{{ languageService.t('auth.login.identifierError') }}</span>
     }
   </div>
 
   <div class="field">
-    <label class="login-form__label" for="login-password">Senha</label>
+    <label class="login-form__label" for="login-password">{{ languageService.t('auth.login.passwordLabel') }}</label>
     <div class="login-form__password-wrapper">
       <input
         id="login-password"
@@ -24,13 +24,13 @@
         [appPasswordMask]="showPassword()"
         formControlName="password"
         autocomplete="current-password"
-        placeholder="Sua senha"
+        [placeholder]="languageService.t('auth.login.passwordPlaceholder')"
       />
       <button
         type="button"
         class="login-form__toggle-password"
         (click)="showPassword.set(!showPassword())"
-        [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+        [attr.aria-label]="showPassword() ? languageService.t('auth.hidePassword') : languageService.t('auth.showPassword')"
       >
         @if (showPassword()) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -46,15 +46,15 @@
       </button>
     </div>
     @if (form.group.get('password')?.invalid && form.group.get('password')?.touched) {
-      <span class="login-form__error">Informe sua senha.</span>
+      <span class="login-form__error">{{ languageService.t('auth.login.passwordError') }}</span>
     }
   </div>
 
   <button type="submit" class="btn login-form__submit" [disabled]="isSubmitting()">
-    {{ isSubmitting() ? 'Entrando...' : 'Entrar' }}
+    {{ isSubmitting() ? languageService.t('auth.login.submitting') : languageService.t('auth.login.submit') }}
   </button>
 
   <p class="login-form__switch">
-    Ainda não tem conta? <a routerLink="/cadastro">Criar conta</a>
+    {{ languageService.t('auth.login.switchText') }} <a routerLink="/cadastro">{{ languageService.t('auth.login.switchLink') }}</a>
   </p>
 </form>

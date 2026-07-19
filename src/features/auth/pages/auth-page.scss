@@ -1,15 +1,20 @@
 // Layout de duas colunas compartilhado por Login e Cadastro. No mobile, o painel de
 // marca (imagem de fundo) desaparece — só o formulário fica, tela cheia (conteúdo
 // essencial primeiro no mobile, ver 04-cross-cutting/frontend/01-cross-cutting.md#performance).
+// Altura fixa (nunca min-height) — o painel nunca deve crescer além do
+// viewport e forçar scroll da página; ver .auth-page__panel para a válvula
+// de escape (overflow-y: auto) só para casos extremos de viewport muito baixo.
 :host {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
-  min-height: 100dvh;
+  height: 100dvh;
   background: var(--color-background);
+  overflow: hidden;
 }
 
 .auth-page__hero {
   display: block;
+  height: 100%;
 }
 
 .auth-page__panel {
@@ -17,13 +22,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8);
+  height: 100%;
+  padding: clamp(var(--space-3), 4vh, var(--space-8));
+  overflow-y: auto;
 }
 
-.auth-page__theme-toggle {
+.auth-page__controls {
   position: absolute;
   top: var(--space-6);
   right: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  z-index: 2;
 }
 
 .auth-page__card {
@@ -31,12 +42,31 @@
   max-width: 26rem;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: clamp(var(--space-3), 3vh, var(--space-6));
+  margin-block: auto;
+  animation: auth-card-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes auth-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-page__card {
+    animation: none;
+  }
 }
 
 .auth-page__card-icon {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: clamp(2.75rem, 8vh, 4.5rem);
+  height: clamp(2.75rem, 8vh, 4.5rem);
   border-radius: var(--radius-lg);
   object-fit: contain;
   padding: var(--space-2);
@@ -55,7 +85,7 @@
 
 .auth-page__title {
   margin: 0;
-  font-size: var(--font-size-xl);
+  font-size: clamp(var(--font-size-lg), 3.2vh, var(--font-size-xl));
 }
 
 .auth-page__subtitle {

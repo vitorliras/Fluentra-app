@@ -2,3 +2,14 @@
 * { margin: 0; }
 body { font-family: var(--font-family-base); color: var(--color-foreground); background: var(--color-background); }
 :focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+
+// Troca suave de tema claro/escuro — os tokens de cor mudam instantaneamente
+// (custom property no <html>), então é essa transição que faz a cor em si
+// animar em vez de trocar de golpe.
+*, *::before, *::after {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}

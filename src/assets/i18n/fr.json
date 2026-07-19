@@ -1,0 +1,77 @@
+{
+  "theme": {
+    "activateLight": "Activer le mode clair",
+    "activateDark": "Activer le mode sombre"
+  },
+  "language": {
+    "label": "Langue",
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français"
+  },
+  "hero": {
+    "headlineLine1": "Arrête de traduire.",
+    "headlineLine2": "Commence à parler.",
+    "subtitle": "Pratique quotidienne de l'anglais parlé avec le shadowing, la répétition espacée et le même moteur d'habitude qui maintient des séries de centaines de jours — sans grammaire par cœur, sans abonnement.",
+    "pillars": {
+      "shadowingTitle": "Shadowing avec de vraies vidéos",
+      "shadowingDescription": "Entraîne-toi avec un contenu que tu choisis, pas des phrases génériques de manuel.",
+      "spacedRepetitionTitle": "Répétition espacée",
+      "spacedRepetitionDescription": "Révise au bon moment, avant d'oublier — sans fiches faites à la main.",
+      "streakTitle": "Série quotidienne",
+      "streakDescription": "Le même moteur d'habitude que Duolingo, mais entraînant ce qui coince vraiment : parler."
+    },
+    "ceoQuote": "\"J'ai créé Fluentra parce que j'en avais assez de comprendre parfaitement l'anglais et de bloquer au moment de parler. Si ça résout ça pour moi, ça valait déjà le coup.\"",
+    "ceoName": "Vitor Lira",
+    "ceoRole": "Fondateur & CEO"
+  },
+  "auth": {
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "login": {
+      "title": "Content de te revoir !",
+      "subtitle": "Connecte-toi pour continuer tes études",
+      "identifierLabel": "E-mail ou nom d'utilisateur",
+      "identifierPlaceholder": "toi@email.com ou ton_pseudo",
+      "identifierError": "Indique ton e-mail ou nom d'utilisateur.",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Ton mot de passe",
+      "passwordError": "Indique ton mot de passe.",
+      "submit": "Se connecter",
+      "submitting": "Connexion...",
+      "switchText": "Pas encore de compte ?",
+      "switchLink": "Créer un compte",
+      "welcomeBack": "Content de te revoir, {name} !"
+    },
+    "register": {
+      "title": "Crée ton compte",
+      "subtitle": "Commence dès aujourd'hui à entraîner ton anglais parlé",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Ton nom",
+      "nameError": "Indique ton nom.",
+      "usernameLabel": "Nom d'utilisateur",
+      "usernamePlaceholder": "ton_pseudo",
+      "usernameError": "Indique un nom d'utilisateur (30 caractères max, sans espace).",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "toi@email.com",
+      "emailError": "Indique un e-mail valide.",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "8 caractères minimum",
+      "passwordError": "8 caractères minimum, avec 1 chiffre et 1 caractère spécial.",
+      "passwordHelper": "8 caractères minimum, avec 1 chiffre et 1 caractère spécial.",
+      "submit": "Créer un compte",
+      "submitting": "Création du compte...",
+      "switchText": "Déjà un compte ?",
+      "switchLink": "Se connecter",
+      "success": "Compte créé ! Il ne reste plus qu'à te connecter."
+    },
+    "errors": {
+      "invalidCredentials": "E-mail/nom d'utilisateur ou mot de passe incorrect.",
+      "loginUnexpected": "Connexion impossible. Réessaie.",
+      "emailAlreadyExists": "Un compte avec cet e-mail existe déjà.",
+      "usernameAlreadyExists": "Ce nom d'utilisateur est déjà pris.",
+      "registerUnexpected": "Impossible de créer le compte. Vérifie les informations et réessaie."
+    }
+  }
+}

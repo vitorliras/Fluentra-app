@@ -3,14 +3,17 @@
 </div>
 
 <div class="auth-page__panel">
-  <app-theme-toggle class="auth-page__theme-toggle" />
+  <div class="auth-page__controls">
+    <app-language-selector />
+    <app-theme-toggle />
+  </div>
 
   <div class="auth-page__card">
     <img class="auth-page__card-icon" src="assets/images/icon.png" alt="" />
 
     <div class="auth-page__heading">
-      <h2 class="auth-page__title">Crie sua conta</h2>
-      <p class="auth-page__subtitle">Comece a treinar sua fala em inglês hoje</p>
+      <h2 class="auth-page__title">{{ languageService.t('auth.register.title') }}</h2>
+      <p class="auth-page__subtitle">{{ languageService.t('auth.register.subtitle') }}</p>
     </div>
 
     <app-register-container />

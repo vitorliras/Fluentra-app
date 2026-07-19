@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
+import { LanguageService } from '../../../core/services/language.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Result } from '../../../shared/results/result';
 import { ResultError } from '../../../shared/results/error';
@@ -9,9 +10,17 @@ import { AuthGateway } from '../data-access/auth.gateway';
 import { User } from '../data-access/models/user.model';
 import { RegisterContainer } from './register.container';
 
+// Fake devolve a própria chave — o Container só precisa escolher a chave certa;
+// o conteúdo traduzido de fato é responsabilidade dos dicionários JSON, não do Container.
+const fakeLanguageService = { t: (key: string) => key };
+
 function createContainer(gateway: Partial<AuthGateway>) {
   TestBed.configureTestingModule({
-    providers: [provideRouter([]), { provide: AuthGateway, useValue: gateway }],
+    providers: [
+      provideRouter([]),
+      { provide: AuthGateway, useValue: gateway },
+      { provide: LanguageService, useValue: fakeLanguageService },
+    ],
   });
 
   const navigateByUrl = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
@@ -47,7 +56,7 @@ describe('RegisterContainer', () => {
     const notification = TestBed.inject(NotificationService);
     const lastNotification = notification.queue().at(-1);
     expect(lastNotification?.tone).toBe('error');
-    expect(lastNotification?.message).toBe('Já existe uma conta com esse e-mail.');
+    expect(lastNotification?.message).toBe('auth.errors.emailAlreadyExists');
     expect(navigateByUrl).not.toHaveBeenCalled();
   });
 
