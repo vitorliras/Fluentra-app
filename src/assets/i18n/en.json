@@ -73,5 +73,52 @@
       "usernameAlreadyExists": "This username is already taken.",
       "registerUnexpected": "Couldn't create the account. Check your details and try again."
     }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "shadowing": "Shadowing",
+      "vocabulary": "Vocabulary",
+      "ipaPractice": "IPA Practice",
+      "vocabGame": "Vocab Game",
+      "progress": "Progress",
+      "settings": "Settings"
+    }
+  },
+  "shadowing": {
+    "eyebrow": "Shadowing",
+    "level": "Level",
+    "history": "History",
+    "progress": "Progress",
+    "mastered": "mastered",
+    "phrase": "Phrase",
+    "of": "of",
+    "pronunciationTitle": "Native speech vs. your speech",
+    "accuracy": "accuracy",
+    "native": "Native",
+    "you": "You",
+    "record": "Record my voice",
+    "speed": "Speed",
+    "nextPhrase": "Next phrase",
+    "phraseList": "Lesson phrases",
+    "nextUpTitle": "Coming up for you",
+    "nextUpVocabulary": "Vocabulary: \"shadowing\", \"confident\", \"naturally\"",
+    "nextUpDescription": "3 words from this lesson entered your spaced review for today.",
+    "reviewNow": "Review now",
+    "search": {
+      "placeholder": "Search lessons, words, exercises…",
+      "loading": "Searching...",
+      "noResults": "No videos found for this search.",
+      "recommended": "Recommended for you",
+      "views": "views",
+      "likes": "likes",
+      "errors": {
+        "searchFailed": "Couldn't search for videos right now. Please try again.",
+        "invalidUrl": "That link doesn't look like a valid YouTube video.",
+        "videoNotFound": "We couldn't find that video.",
+        "videoNotEligible": "This video doesn't have English captions available.",
+        "quotaExhausted": "Daily search limit reached. Try again tomorrow."
+      }
+    }
   }
 }

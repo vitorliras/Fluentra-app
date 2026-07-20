@@ -43,6 +43,7 @@ export class LoginContainer {
 
       if (result.isSuccess && result.value) {
         this.session.setToken(result.value.accessToken);
+        this.session.setName(result.value.name);
         this.notification.success(this.languageService.t('auth.login.welcomeBack', { name: result.value.name }));
         return;
       }

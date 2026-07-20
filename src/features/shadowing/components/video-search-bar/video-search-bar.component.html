@@ -1,0 +1,72 @@
+<div class="video-search">
+  <div class="video-search__field">
+    <svg class="video-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+    <input
+      type="text"
+      class="video-search__input"
+      [value]="query()"
+      (input)="onInput($any($event.target).value)"
+      (focus)="onFocus()"
+      (keydown.enter)="onSubmit()"
+      (blur)="onBlur()"
+      [placeholder]="languageService.t('shadowing.search.placeholder')"
+    />
+  </div>
+
+  @if (dropdownOpen()) {
+    <div class="video-search__dropdown">
+      @if (isLoading()) {
+        <p class="video-search__state">{{ languageService.t('shadowing.search.loading') }}</p>
+      } @else if (errorKey()) {
+        <p class="video-search__state video-search__state--error">{{ languageService.t(errorKey()!) }}</p>
+      } @else if (singleResult(); as video) {
+        <button type="button" class="video-search__result" (click)="selectResult()">
+          <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="{ $implicit: video }" />
+        </button>
+      } @else if (results(); as videos) {
+        @if (videos.length === 0) {
+          <p class="video-search__state">{{ languageService.t('shadowing.search.noResults') }}</p>
+        } @else {
+          @for (video of videos; track video.youTubeVideoId) {
+            <button type="button" class="video-search__result" (click)="selectResult()">
+              <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="{ $implicit: video }" />
+            </button>
+          }
+        }
+      } @else {
+        <p class="video-search__section-label">{{ languageService.t('shadowing.search.recommended') }}</p>
+        @for (video of recommendedPlaceholder; track video.youTubeVideoId) {
+          <div class="video-search__result video-search__result--placeholder">
+            <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="{ $implicit: video }" />
+          </div>
+        }
+      }
+    </div>
+  }
+</div>
+
+<ng-template #resultRow let-video>
+  <span class="video-search__thumb">
+    @if (video.thumbnailUrl) {
+      <img [src]="video.thumbnailUrl" alt="" />
+    } @else {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" />
+        <path d="m10 9 5 3-5 3V9Z" />
+      </svg>
+    }
+  </span>
+  <span class="video-search__info">
+    <span class="video-search__title">{{ video.title }}</span>
+    <span class="video-search__meta">
+      <span>{{ formatDuration(video.durationSeconds) }}</span>
+      <span aria-hidden="true">·</span>
+      <span>{{ formatCount(video.viewCount) }} {{ languageService.t('shadowing.search.views') }}</span>
+      <span aria-hidden="true">·</span>
+      <span>{{ formatCount(video.likeCount) }} {{ languageService.t('shadowing.search.likes') }}</span>
+    </span>
+  </span>
+</ng-template>

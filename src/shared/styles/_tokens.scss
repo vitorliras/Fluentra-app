@@ -28,16 +28,18 @@
   --shadow-lg: 0 12px 24px -8px rgb(15 23 42 / 0.15);
   --duration-fast: 120ms; --duration-normal: 200ms;
 
-  // Semântico
-  --color-background: var(--gray-50);
+  // Semântico — fundo com leve matiz de marca (não cinza/branco puro), para a
+  // superfície dos cards (branco de verdade) ter contraste real contra o fundo
+  // da página, em vez de "tudo branco".
+  --color-background: #f4f3fb;
   --color-surface: #ffffff;
   --color-foreground: var(--gray-900);
   --color-foreground-muted: var(--gray-500);
-  --color-border: var(--gray-200);
+  --color-border: #e3e1f2;
   --color-primary: var(--brand-600);
   --color-primary-hover: var(--brand-700);
   --color-primary-foreground: #ffffff;
-  --color-secondary: var(--gray-100);
+  --color-secondary: #ece9f9;
   --color-success: var(--green-600);
   --color-warning: var(--amber-600);
   --color-destructive: var(--red-600);

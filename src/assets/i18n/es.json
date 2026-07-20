@@ -73,5 +73,52 @@
       "usernameAlreadyExists": "Ese usuario ya está en uso.",
       "registerUnexpected": "No fue posible crear la cuenta. Revisa los datos e inténtalo de nuevo."
     }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Panel",
+      "shadowing": "Shadowing",
+      "vocabulary": "Vocabulario",
+      "ipaPractice": "Práctica de IPA",
+      "vocabGame": "Juego de Vocabulario",
+      "progress": "Progreso",
+      "settings": "Configuración"
+    }
+  },
+  "shadowing": {
+    "eyebrow": "Shadowing",
+    "level": "Nivel",
+    "history": "Historial",
+    "progress": "Progreso",
+    "mastered": "dominadas",
+    "phrase": "Frase",
+    "of": "de",
+    "pronunciationTitle": "Habla nativa vs. tu habla",
+    "accuracy": "precisión",
+    "native": "Nativo",
+    "you": "Tú",
+    "record": "Grabar mi voz",
+    "speed": "Velocidad",
+    "nextPhrase": "Siguiente frase",
+    "phraseList": "Frases de la lección",
+    "nextUpTitle": "A continuación para ti",
+    "nextUpVocabulary": "Vocabulario: \"shadowing\", \"confident\", \"naturally\"",
+    "nextUpDescription": "3 palabras de esta lección entraron en tu repaso espaciado de hoy.",
+    "reviewNow": "Repasar ahora",
+    "search": {
+      "placeholder": "Buscar lecciones, palabras, ejercicios…",
+      "loading": "Buscando...",
+      "noResults": "No se encontraron vídeos para esta búsqueda.",
+      "recommended": "Recomendados para ti",
+      "views": "visualizaciones",
+      "likes": "me gusta",
+      "errors": {
+        "searchFailed": "No fue posible buscar vídeos ahora. Inténtalo de nuevo.",
+        "invalidUrl": "Ese enlace no parece ser un vídeo válido de YouTube.",
+        "videoNotFound": "No encontramos ese vídeo.",
+        "videoNotEligible": "Ese vídeo no tiene subtítulos en inglés disponibles.",
+        "quotaExhausted": "Límite diario de búsqueda alcanzado. Inténtalo mañana."
+      }
+    }
   }
 }
