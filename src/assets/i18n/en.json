@@ -87,6 +87,10 @@
       "settings": "Settings"
     }
   },
+  "profileMenu": {
+    "myProfile": "My profile",
+    "logout": "Log out"
+  },
   "shadowing": {
     "eyebrow": "Shadowing",
     "level": "Level",

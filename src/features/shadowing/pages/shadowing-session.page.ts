@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { LanguageSelectorComponent } from '../../../core/components/language-selector/language-selector.component';
+import { ProfileMenuComponent } from '../../../core/components/profile-menu/profile-menu.component';
 import { ThemeToggleComponent } from '../../../core/components/theme-toggle/theme-toggle.component';
 import { LanguageService } from '../../../core/services/language.service';
-import { SessionService } from '../../../core/services/session.service';
 import { ShellLayoutService } from '../../../core/services/shell-layout.service';
 import { VideoSearchResult } from '../data-access/models/video-search-result.model';
 import { HistoryDropdownComponent } from '../components/history-dropdown/history-dropdown.component';
@@ -18,13 +18,18 @@ interface PracticePhrase {
 @Component({
   selector: 'app-shadowing-session-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [VideoSearchBarComponent, ThemeToggleComponent, LanguageSelectorComponent, HistoryDropdownComponent],
+  imports: [
+    VideoSearchBarComponent,
+    ThemeToggleComponent,
+    LanguageSelectorComponent,
+    HistoryDropdownComponent,
+    ProfileMenuComponent,
+  ],
   templateUrl: './shadowing-session.page.html',
   styleUrl: './shadowing-session.page.scss',
 })
 export class ShadowingSessionPage {
   protected readonly languageService = inject(LanguageService);
-  protected readonly session = inject(SessionService);
   protected readonly shellLayout = inject(ShellLayoutService);
 
   protected readonly selectedVideo = signal<VideoSearchResult | null>(null);

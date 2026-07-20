@@ -99,19 +99,6 @@
   color: var(--color-foreground);
 }
 
-.session__avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--radius-full);
-  background: var(--color-primary);
-  color: var(--color-primary-foreground);
-  font-weight: 700;
-  font-size: var(--font-size-sm);
-}
-
 .session__search-row {
   display: flex;
   align-items: center;
