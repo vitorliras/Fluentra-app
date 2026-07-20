@@ -3,6 +3,7 @@ import { LanguageSelectorComponent } from '../../../core/components/language-sel
 import { ThemeToggleComponent } from '../../../core/components/theme-toggle/theme-toggle.component';
 import { LanguageService } from '../../../core/services/language.service';
 import { SessionService } from '../../../core/services/session.service';
+import { ShellLayoutService } from '../../../core/services/shell-layout.service';
 import { VideoSearchResult } from '../data-access/models/video-search-result.model';
 import { VideoSearchBarComponent } from '../components/video-search-bar/video-search-bar.component';
 
@@ -23,6 +24,7 @@ interface PracticePhrase {
 export class ShadowingSessionPage {
   protected readonly languageService = inject(LanguageService);
   protected readonly session = inject(SessionService);
+  protected readonly shellLayout = inject(ShellLayoutService);
 
   protected readonly selectedVideo = signal<VideoSearchResult | null>(null);
 

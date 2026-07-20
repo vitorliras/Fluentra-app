@@ -20,7 +20,7 @@
   gap: var(--space-3);
 }
 
-.session__back {
+.session__menu-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -30,11 +30,22 @@
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-foreground-muted);
-  cursor: default;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) ease-out, color var(--duration-fast) ease-out;
+
+  &:hover {
+    background: var(--color-secondary);
+    color: var(--color-foreground);
+  }
 
   svg {
     width: 1.125rem;
     height: 1.125rem;
+    transition: transform var(--duration-normal) ease-out;
+  }
+
+  &--collapsed svg {
+    transform: rotate(180deg);
   }
 }
 

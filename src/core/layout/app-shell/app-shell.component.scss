@@ -50,37 +50,6 @@
   }
 }
 
-.shell__collapse-toggle {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  width: 100%;
-  padding: var(--space-3);
-  border: none;
-  border-radius: var(--radius-md);
-  background: none;
-  color: var(--color-foreground-muted);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color var(--duration-fast) ease-out, color var(--duration-fast) ease-out;
-
-  &:hover {
-    background: var(--color-secondary);
-    color: var(--color-foreground);
-  }
-
-  svg {
-    flex: none;
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  .shell--collapsed & {
-    justify-content: center;
-  }
-}
-
 .shell__nav {
   display: flex;
   flex-direction: column;

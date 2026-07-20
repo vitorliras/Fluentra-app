@@ -1,22 +1,9 @@
-<div class="shell" [class.shell--collapsed]="collapsed()">
-  <aside class="shell__sidebar" [style.width]="sidebarWidth()">
+<div class="shell" [class.shell--collapsed]="shellLayout.collapsed()">
+  <aside class="shell__sidebar" [style.width]="shellLayout.sidebarWidth()">
     <div class="shell__logo">
       <img src="assets/images/icon.png" alt="Fluentra" />
       <span class="shell__logo-text">Fluentra</span>
     </div>
-
-    <button
-      type="button"
-      class="shell__collapse-toggle"
-      (click)="toggleCollapsed()"
-      [attr.aria-label]="languageService.t(collapsed() ? 'shell.expandMenu' : 'shell.collapseMenu')"
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="M9 5v14" />
-      </svg>
-      <span class="shell__nav-label">{{ languageService.t('shell.collapseMenu') }}</span>
-    </button>
 
     <nav class="shell__nav">
       @for (item of navItems; track item.key) {
@@ -26,7 +13,7 @@
             [routerLink]="item.route"
             routerLinkActive="shell__nav-item--active"
             [attr.data-tooltip]="languageService.t(item.labelKey)"
-            [attr.aria-label]="collapsed() ? languageService.t(item.labelKey) : null"
+            [attr.aria-label]="shellLayout.collapsed() ? languageService.t(item.labelKey) : null"
           >
             <span class="shell__nav-icon" aria-hidden="true">
               @switch (item.key) {
@@ -46,7 +33,7 @@
             tabindex="-1"
             aria-disabled="true"
             [attr.data-tooltip]="languageService.t(item.labelKey)"
-            [attr.aria-label]="collapsed() ? languageService.t(item.labelKey) : null"
+            [attr.aria-label]="shellLayout.collapsed() ? languageService.t(item.labelKey) : null"
           >
             <span class="shell__nav-icon" aria-hidden="true">
               @switch (item.key) {
