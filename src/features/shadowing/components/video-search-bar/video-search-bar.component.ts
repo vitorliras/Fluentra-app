@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, output, signal } from '@angular/core';
 import { LanguageService } from '../../../../core/services/language.service';
 import { ShadowingGateway } from '../../data-access/shadowing.gateway';
 import { VideoSearchResult } from '../../data-access/models/video-search-result.model';
@@ -48,6 +48,8 @@ export class VideoSearchBarComponent {
   protected readonly errorKey = signal<string | null>(null);
   protected readonly recommendedPlaceholder = RECOMMENDED_PLACEHOLDER;
 
+  readonly videoSelected = output<VideoSearchResult>();
+
   private lastLookedUpValue = '';
 
   protected onInput(value: string): void {
@@ -81,8 +83,9 @@ export class VideoSearchBarComponent {
     setTimeout(() => this.executeSearch(), BLUR_SEARCH_DELAY_MS);
   }
 
-  protected selectResult(): void {
+  protected selectResult(video: VideoSearchResult): void {
     this.dropdownOpen.set(false);
+    this.videoSelected.emit(video);
   }
 
   protected formatDuration(totalSeconds: number): string {

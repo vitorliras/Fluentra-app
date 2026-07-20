@@ -75,6 +75,8 @@
     }
   },
   "shell": {
+    "collapseMenu": "Collapse menu",
+    "expandMenu": "Expand menu",
     "nav": {
       "dashboard": "Dashboard",
       "shadowing": "Shadowing",
@@ -97,7 +99,8 @@
     "accuracy": "accuracy",
     "native": "Native",
     "you": "You",
-    "record": "Record my voice",
+    "record": "Record",
+    "hidePhonetics": "Hide phonetics",
     "speed": "Speed",
     "nextPhrase": "Next phrase",
     "phraseList": "Lesson phrases",

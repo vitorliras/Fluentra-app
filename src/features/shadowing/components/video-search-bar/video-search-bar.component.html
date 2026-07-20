@@ -23,7 +23,7 @@
       } @else if (errorKey()) {
         <p class="video-search__state video-search__state--error">{{ languageService.t(errorKey()!) }}</p>
       } @else if (singleResult(); as video) {
-        <button type="button" class="video-search__result" (click)="selectResult()">
+        <button type="button" class="video-search__result" (click)="selectResult(video)">
           <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="{ $implicit: video }" />
         </button>
       } @else if (results(); as videos) {
@@ -31,7 +31,7 @@
           <p class="video-search__state">{{ languageService.t('shadowing.search.noResults') }}</p>
         } @else {
           @for (video of videos; track video.youTubeVideoId) {
-            <button type="button" class="video-search__result" (click)="selectResult()">
+            <button type="button" class="video-search__result" (click)="selectResult(video)">
               <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="{ $implicit: video }" />
             </button>
           }

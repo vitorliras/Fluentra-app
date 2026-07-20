@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { LanguageService } from '../../services/language.service';
 
@@ -17,6 +17,12 @@ interface ShellNavItem {
 })
 export class AppShellComponent {
   protected readonly languageService = inject(LanguageService);
+
+  protected readonly collapsed = signal(false);
+
+  protected toggleCollapsed(): void {
+    this.collapsed.update((value) => !value);
+  }
 
   protected readonly navItems: ShellNavItem[] = [
     { key: 'dashboard', labelKey: 'shell.nav.dashboard', route: null },

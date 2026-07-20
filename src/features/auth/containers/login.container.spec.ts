@@ -18,7 +18,7 @@ const fakeLanguageService = { t: (key: string) => key };
 function createContainer(gateway: Partial<AuthGateway>) {
   TestBed.configureTestingModule({
     providers: [
-      provideRouter([]),
+      provideRouter([{ path: 'shadowing', children: [] }]),
       { provide: AuthGateway, useValue: gateway },
       { provide: LanguageService, useValue: fakeLanguageService },
     ],

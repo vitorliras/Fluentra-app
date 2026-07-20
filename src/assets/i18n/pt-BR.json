@@ -75,6 +75,8 @@
     }
   },
   "shell": {
+    "collapseMenu": "Recolher menu",
+    "expandMenu": "Expandir menu",
     "nav": {
       "dashboard": "Painel",
       "shadowing": "Shadowing",
@@ -97,7 +99,8 @@
     "accuracy": "precisão",
     "native": "Nativo",
     "you": "Você",
-    "record": "Gravar minha voz",
+    "record": "Gravar",
+    "hidePhonetics": "Ocultar fonética",
     "speed": "Velocidade",
     "nextPhrase": "Próxima frase",
     "phraseList": "Frases da lição",

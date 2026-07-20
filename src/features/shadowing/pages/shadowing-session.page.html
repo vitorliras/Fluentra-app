@@ -22,7 +22,7 @@
   </header>
 
   <div class="session__search-row">
-    <app-video-search-bar />
+    <app-video-search-bar (videoSelected)="onVideoSelected($event)" />
     <button type="button" class="session__history" tabindex="-1" aria-disabled="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 8v4l3 3" />
@@ -44,12 +44,26 @@
     <div class="session__main">
       <div class="session__card">
         <div class="session__card-top">
-          <span class="session__phrase-index">{{ languageService.t('shadowing.phrase') }} 1 {{ languageService.t('shadowing.of') }} 6</span>
+          <div class="session__card-top-left">
+            <span class="session__phrase-index">{{ languageService.t('shadowing.phrase') }} 1 {{ languageService.t('shadowing.of') }} 6</span>
+            <button type="button" class="session__phonetics-toggle" tabindex="-1" aria-disabled="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              {{ languageService.t('shadowing.hidePhonetics') }}
+            </button>
+          </div>
           <span class="session__level-dot">● A2</span>
         </div>
 
         <div class="session__video">
-          <span class="session__video-source">Fluent English Stories</span>
+          @if (selectedVideo(); as video) {
+            <img class="session__video-thumb" [src]="video.thumbnailUrl" alt="" />
+            <span class="session__video-source">{{ video.title }}</span>
+          } @else {
+            <span class="session__video-source">Fluent English Stories</span>
+          }
           <button type="button" class="session__play" tabindex="-1" aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M8 5v14l11-7z" />
@@ -61,7 +75,8 @@
           Shadowing <span class="session__phrase-highlight">is</span> not only for songs or movies, you can also use
           it for daily life English.
         </p>
-        <p class="session__phrase-ipa">/ˈʃædəʊɪŋ/ /ɪz/ /nɒt/ /ˈəʊnli/ /fɔːr/ /sɒŋz/ /ɔːr/ /ˈmuːvɪz/</p>
+        <p class="session__phrase-ipa">{{ phrases[0].phonetic }}</p>
+        <p class="session__phrase-translation">{{ phrases[0].translation }}</p>
       </div>
 
       <div class="session__card">
@@ -127,7 +142,11 @@
                   {{ $index + 1 }}
                 }
               </span>
-              <span class="session__phrase-item-text">{{ phrase.text }}</span>
+              <span class="session__phrase-item-body">
+                <span class="session__phrase-item-text">{{ phrase.text }}</span>
+                <span class="session__phrase-item-ipa">{{ phrase.phonetic }}</span>
+                <span class="session__phrase-item-translation">{{ phrase.translation }}</span>
+              </span>
             </li>
           }
         </ul>

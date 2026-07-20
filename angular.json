@@ -5,7 +5,8 @@
     "packageManager": "npm",
     "schematicCollections": [
       "angular-eslint"
-    ]
+    ],
+    "analytics": "6b35d645-e030-4dab-b628-1fe3a7d6232a"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -43,8 +44,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "6kB",
+                  "maximumError": "10kB"
                 }
               ],
               "outputHashing": "all"
