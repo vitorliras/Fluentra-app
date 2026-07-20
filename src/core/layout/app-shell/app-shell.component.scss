@@ -9,11 +9,16 @@
   background: var(--color-background);
 }
 
+.shell__backdrop {
+  display: none;
+}
+
 .shell__sidebar {
   display: flex;
   flex: none;
   flex-direction: column;
   gap: var(--space-6);
+  width: var(--shell-sidebar-width);
   padding: var(--space-6) var(--space-4);
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
@@ -145,4 +150,29 @@
   min-width: 0;
   overflow-y: auto;
   height: 100%;
+}
+
+@media (max-width: 768px) {
+  .shell__sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 40;
+    width: 15rem;
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--duration-normal) ease-out;
+    transform: translateX(0);
+  }
+
+  .shell--collapsed .shell__sidebar {
+    transform: translateX(-100%);
+  }
+
+  .shell:not(.shell--collapsed) .shell__backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgb(0 0 0 / 0.4);
+  }
 }
