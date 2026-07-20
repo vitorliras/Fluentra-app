@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PasswordMaskDirective } from '../../../core/directives/password-mask.directive';
 import { LanguageService } from '../../../core/services/language.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -24,6 +24,7 @@ export class LoginContainer {
   private readonly gateway = inject(AuthGateway);
   private readonly session = inject(SessionService);
   private readonly notification = inject(NotificationService);
+  private readonly router = inject(Router);
   protected readonly languageService = inject(LanguageService);
   protected readonly form = inject(LoginForm);
 
@@ -45,6 +46,7 @@ export class LoginContainer {
         this.session.setToken(result.value.accessToken);
         this.session.setName(result.value.name);
         this.notification.success(this.languageService.t('auth.login.welcomeBack', { name: result.value.name }));
+        this.router.navigate(['/shadowing']);
         return;
       }
 
