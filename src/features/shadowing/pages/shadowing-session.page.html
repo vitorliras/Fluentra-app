@@ -76,7 +76,9 @@
           it for daily life English.
         </p>
         <p class="session__phrase-ipa">{{ phrases[0].phonetic }}</p>
-        <p class="session__phrase-translation">{{ phrases[0].translation }}</p>
+        @for (line of translationLines(phrases[0].translation); track $index) {
+          <p class="session__phrase-translation">{{ line }}</p>
+        }
       </div>
 
       <div class="session__card">
@@ -142,11 +144,7 @@
                   {{ $index + 1 }}
                 }
               </span>
-              <span class="session__phrase-item-body">
-                <span class="session__phrase-item-text">{{ phrase.text }}</span>
-                <span class="session__phrase-item-ipa">{{ phrase.phonetic }}</span>
-                <span class="session__phrase-item-translation">{{ phrase.translation }}</span>
-              </span>
+              <span class="session__phrase-item-text">{{ phrase.text }}</span>
             </li>
           }
         </ul>

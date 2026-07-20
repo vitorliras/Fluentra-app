@@ -432,25 +432,10 @@
   }
 }
 
-.session__phrase-item-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.session__phrase-item-ipa,
-.session__phrase-item-translation {
-  opacity: 0.85;
-}
-
-.session__phrase-item-ipa {
-  font-family: ui-monospace, monospace;
-  font-size: 0.75rem;
-}
-
-.session__phrase-item-translation {
-  font-style: italic;
+.session__phrase-item-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .session__next-up-text {

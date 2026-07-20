@@ -68,4 +68,8 @@ export class ShadowingSessionPage {
   protected onVideoSelected(video: VideoSearchResult): void {
     this.selectedVideo.set(video);
   }
+
+  protected translationLines(translation: string): string[] {
+    return translation.split(/(?<=[.!?]"?)\s+(?=[A-ZÀ-ÖØ-Þ])/);
+  }
 }
