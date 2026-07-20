@@ -14,17 +14,12 @@
   flex: none;
   flex-direction: column;
   gap: var(--space-6);
-  width: 15rem;
   padding: var(--space-6) var(--space-4);
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
   overflow-x: hidden;
   overflow-y: auto;
   transition: width var(--duration-normal) ease-out;
-
-  .shell--collapsed & {
-    width: 4.75rem;
-  }
 }
 
 .shell__logo {

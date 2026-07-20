@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { LanguageService } from '../../services/language.service';
 
@@ -19,6 +19,7 @@ export class AppShellComponent {
   protected readonly languageService = inject(LanguageService);
 
   protected readonly collapsed = signal(false);
+  protected readonly sidebarWidth = computed(() => (this.collapsed() ? '4.75rem' : '15rem'));
 
   protected toggleCollapsed(): void {
     this.collapsed.update((value) => !value);
