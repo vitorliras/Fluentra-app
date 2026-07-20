@@ -29,13 +29,7 @@
 
   <div class="session__search-row">
     <app-video-search-bar (videoSelected)="onVideoSelected($event)" />
-    <button type="button" class="session__history" tabindex="-1" aria-disabled="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 8v4l3 3" />
-        <circle cx="12" cy="12" r="9" />
-      </svg>
-      {{ languageService.t('shadowing.history') }}
-    </button>
+    <app-history-dropdown />
   </div>
 
   <div class="session__progress-row">

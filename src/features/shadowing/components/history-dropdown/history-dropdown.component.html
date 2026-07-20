@@ -1,0 +1,44 @@
+<button
+  type="button"
+  class="history-dropdown__trigger"
+  (click)="toggle()"
+  [attr.aria-expanded]="open()"
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 8v4l3 3" />
+    <circle cx="12" cy="12" r="9" />
+  </svg>
+  {{ languageService.t('shadowing.history') }}
+</button>
+
+@if (open()) {
+  <div class="history-dropdown__menu">
+    @if (items.length === 0) {
+      <p class="history-dropdown__empty">{{ languageService.t('shadowing.historyEmpty') }}</p>
+    } @else {
+      @for (item of items; track item.youTubeVideoId) {
+        <div class="history-dropdown__item">
+          <span class="history-dropdown__thumb">
+            @if (item.thumbnailUrl) {
+              <img [src]="item.thumbnailUrl" alt="" />
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" />
+                <path d="m10 9 5 3-5 3V9Z" />
+              </svg>
+            }
+          </span>
+          <span class="history-dropdown__info">
+            <span class="history-dropdown__title">{{ item.title }}</span>
+            <span class="history-dropdown__progress">
+              <span class="history-dropdown__progress-bar">
+                <span class="history-dropdown__progress-fill" [style.width.%]="progressPercent(item)"></span>
+              </span>
+              <span class="history-dropdown__progress-count">{{ item.completedPhrases }}/{{ item.totalPhrases }}</span>
+            </span>
+          </span>
+        </div>
+      }
+    }
+  </div>
+}

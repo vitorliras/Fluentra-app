@@ -5,6 +5,7 @@ import { LanguageService } from '../../../core/services/language.service';
 import { SessionService } from '../../../core/services/session.service';
 import { ShellLayoutService } from '../../../core/services/shell-layout.service';
 import { VideoSearchResult } from '../data-access/models/video-search-result.model';
+import { HistoryDropdownComponent } from '../components/history-dropdown/history-dropdown.component';
 import { VideoSearchBarComponent } from '../components/video-search-bar/video-search-bar.component';
 
 interface PracticePhrase {
@@ -17,7 +18,7 @@ interface PracticePhrase {
 @Component({
   selector: 'app-shadowing-session-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [VideoSearchBarComponent, ThemeToggleComponent, LanguageSelectorComponent],
+  imports: [VideoSearchBarComponent, ThemeToggleComponent, LanguageSelectorComponent, HistoryDropdownComponent],
   templateUrl: './shadowing-session.page.html',
   styleUrl: './shadowing-session.page.scss',
 })

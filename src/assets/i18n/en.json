@@ -91,6 +91,7 @@
     "eyebrow": "Shadowing",
     "level": "Level",
     "history": "History",
+    "historyEmpty": "You haven't started practicing any video yet.",
     "progress": "Progress",
     "mastered": "mastered",
     "phrase": "Phrase",
