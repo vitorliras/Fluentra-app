@@ -7,27 +7,6 @@ import { VideoSearchResult } from '../../data-access/models/video-search-result.
 const DEFAULT_DURATION_MINUTES = 10;
 const BLUR_SEARCH_DELAY_MS = 150;
 
-const RECOMMENDED_PLACEHOLDER: VideoSearchResult[] = [
-  {
-    youTubeVideoId: 'placeholder-1',
-    title: 'Everyday English Conversations for Beginners',
-    thumbnailUrl: '',
-    durationSeconds: 312,
-    viewCount: 850_000,
-    likeCount: 42_000,
-    popularityTier: 'Grande',
-  },
-  {
-    youTubeVideoId: 'placeholder-2',
-    title: 'How to Sound More Natural in English',
-    thumbnailUrl: '',
-    durationSeconds: 480,
-    viewCount: 1_200_000,
-    likeCount: 67_000,
-    popularityTier: 'Viral',
-  },
-];
-
 @Component({
   selector: 'app-video-search-bar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,7 +26,6 @@ export class VideoSearchBarComponent {
   protected readonly singleResult = signal<VideoSearchResult | null>(null);
   protected readonly errorKey = signal<string | null>(null);
   protected readonly durationMinutes = signal(DEFAULT_DURATION_MINUTES);
-  protected readonly recommendedPlaceholder = RECOMMENDED_PLACEHOLDER;
 
   readonly videoSelected = output<VideoSearchResult>();
 
@@ -58,7 +36,7 @@ export class VideoSearchBarComponent {
     this.errorKey.set(null);
 
     if (!value) {
-      this.showRecommended();
+      this.resetToIdle();
       return;
     }
 
@@ -69,9 +47,7 @@ export class VideoSearchBarComponent {
   }
 
   protected onFocus(): void {
-    if (!this.query()) {
-      this.showRecommended();
-    } else {
+    if (this.query()) {
       this.dropdownOpen.set(true);
     }
   }
@@ -81,10 +57,12 @@ export class VideoSearchBarComponent {
   }
 
   protected onDurationInput(value: string): void {
-    const parsed = Number(value);
-    if (Number.isFinite(parsed) && parsed > 0) {
-      this.durationMinutes.set(parsed);
+    const digitsOnly = value.replace(/\D/g, '');
+    if (!digitsOnly) {
+      return;
     }
+
+    this.durationMinutes.set(Math.min(Number(digitsOnly), 120));
   }
 
   protected onBlur(): void {
@@ -152,11 +130,11 @@ export class VideoSearchBarComponent {
     });
   }
 
-  private showRecommended(): void {
+  private resetToIdle(): void {
     this.results.set(null);
     this.singleResult.set(null);
     this.errorKey.set(null);
-    this.dropdownOpen.set(true);
+    this.dropdownOpen.set(false);
   }
 
   private isVideoUrl(value: string): boolean {

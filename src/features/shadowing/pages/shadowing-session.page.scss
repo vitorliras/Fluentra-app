@@ -208,7 +208,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 12rem;
+  aspect-ratio: 16 / 9;
   margin-bottom: var(--space-5);
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--brand-900), var(--brand-700));
@@ -497,10 +497,6 @@
 
   .session__card-top {
     flex-wrap: wrap;
-  }
-
-  .session__video {
-    height: 9rem;
   }
 
   .session__phrase-text {

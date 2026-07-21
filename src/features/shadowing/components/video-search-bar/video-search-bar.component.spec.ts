@@ -79,13 +79,11 @@ describe('VideoSearchBarComponent', () => {
     expect(component['errorKey']()).toBe('shadowing.search.errors.videoNotEligible');
   });
 
-  it('should show the recommended placeholder when the field is focused empty', () => {
+  it('should not open the dropdown when the field is focused empty', () => {
     const component = createComponent({ searchVideos: vi.fn(), getVideoByUrl: vi.fn() });
 
     component['onFocus']();
 
-    expect(component['dropdownOpen']()).toBe(true);
-    expect(component['results']()).toBeNull();
-    expect(component['recommendedPlaceholder'].length).toBe(2);
+    expect(component['dropdownOpen']()).toBe(false);
   });
 });

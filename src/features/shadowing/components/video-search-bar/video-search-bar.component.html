@@ -20,10 +20,11 @@
     <label class="video-search__duration">
       <span class="video-search__duration-label">{{ languageService.t('shadowing.search.durationLabel') }}</span>
       <input
-        type="number"
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        maxlength="3"
         class="video-search__duration-input"
-        min="1"
-        max="120"
         [value]="durationMinutes()"
         (input)="onDurationInput($any($event.target).value)"
       />
@@ -49,13 +50,6 @@
               <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="{ $implicit: video }" />
             </button>
           }
-        }
-      } @else {
-        <p class="video-search__section-label">{{ languageService.t('shadowing.search.recommended') }}</p>
-        @for (video of recommendedPlaceholder; track video.youTubeVideoId) {
-          <div class="video-search__result video-search__result--placeholder">
-            <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="{ $implicit: video }" />
-          </div>
         }
       }
     </div>

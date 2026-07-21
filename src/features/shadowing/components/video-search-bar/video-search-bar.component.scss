@@ -123,13 +123,8 @@
   text-align: start;
   cursor: pointer;
 
-  &:hover:not(&--placeholder) {
+  &:hover {
     background: var(--color-secondary);
-  }
-
-  &--placeholder {
-    cursor: default;
-    opacity: 0.85;
   }
 }
 
