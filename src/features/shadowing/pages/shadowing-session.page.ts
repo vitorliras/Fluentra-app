@@ -29,6 +29,7 @@ const FEEDBACK_DISPLAY_MS = 2500;
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5];
 const REPEAT_COUNT_OPTIONS = [1, 2, 3, 4];
 const WAIT_MODE_OPTIONS = [0, 25, 50, 75, 100];
+const TRANSLATION_LANGUAGE_OPTIONS = ['pt', 'es', 'fr'];
 
 @Component({
   selector: 'app-shadowing-session-page',
@@ -56,6 +57,7 @@ export class ShadowingSessionPage {
   protected readonly speedOptions = SPEED_OPTIONS;
   protected readonly repeatCountOptions = REPEAT_COUNT_OPTIONS;
   protected readonly waitModeOptions = WAIT_MODE_OPTIONS;
+  protected readonly translationLanguageOptions = TRANSLATION_LANGUAGE_OPTIONS;
 
   protected readonly selectedVideo = signal<VideoSearchResult | null>(null);
   protected readonly scenes = signal<Scene[]>([]);
@@ -70,6 +72,8 @@ export class ShadowingSessionPage {
   protected readonly speed = signal(1);
   protected readonly repeatCount = signal(1);
   protected readonly waitModePercent = signal(50);
+  protected readonly showTranslation = signal(true);
+  protected readonly translationLanguage = signal('pt');
 
   private readonly seenSceneIds = new Set<number>();
   private readonly sceneAttemptCounts = new Map<number, number>();
@@ -104,6 +108,18 @@ export class ShadowingSessionPage {
 
   protected sceneWords(scene: Scene): string[] {
     return scene.text.split(' ').filter(Boolean);
+  }
+
+  protected sceneTranslation(scene: Scene): string | null {
+    return scene.translations[this.translationLanguage()] ?? null;
+  }
+
+  protected onToggleTranslation(): void {
+    this.showTranslation.update((value) => !value);
+  }
+
+  protected onTranslationLanguageChange(value: string): void {
+    this.translationLanguage.set(value);
   }
 
   protected async onVideoSelected(video: VideoSearchResult): Promise<void> {

@@ -1,7 +1,7 @@
 export interface SceneItemDto {
   id: number;
   text: string;
-  translation: string | null;
+  translations: Record<string, string>;
   startSeconds: number;
   endSeconds: number;
   sequenceOrder: number;

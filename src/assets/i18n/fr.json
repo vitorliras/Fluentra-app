@@ -132,6 +132,13 @@
       "next": "Phrase suivante",
       "repeatCount": "Répétitions",
       "waitMode": "Temps d'attente",
+      "hideTranslation": "Masquer la traduction",
+      "showTranslation": "Afficher la traduction",
+      "translationLang": {
+        "pt": "Portugais",
+        "es": "Espagnol",
+        "fr": "Français"
+      },
       "evaluatingLabel": "Évaluation de ta prononciation…",
       "repeatLabel": "Répétons cette phrase",
       "advanceLabel": "Bien joué ! Phrase suivante",

@@ -70,14 +70,31 @@
           <p class="session__placeholder">{{ languageService.t('shadowing.session.importing') }}</p>
         } @else if (currentScene(); as scene) {
           <p class="session__phrase-text">
-            @for (word of sceneWords(scene); track $index) {
-              <span class="session__word" [class.session__word--active]="$index === highlightedWordIndex()">{{ word }}</span>
-              @if (!$last) {<span> </span>}
+            @for (word of sceneWords(scene); track $index; let last = $last) {
+              <span class="session__word" [class.session__word--active]="$index === highlightedWordIndex()">{{ word }}</span>{{ last ? '' : ' ' }}
             }
           </p>
 
-          @if (scene.translation) {
-            <p class="session__phrase-translation">{{ scene.translation }}</p>
+          <div class="session__support-row">
+            <button type="button" class="session__support-toggle" (click)="onToggleTranslation()">
+              @if (showTranslation()) {
+                {{ languageService.t('shadowing.session.hideTranslation') }}
+              } @else {
+                {{ languageService.t('shadowing.session.showTranslation') }}
+              }
+            </button>
+
+            @if (showTranslation()) {
+              <select class="session__select session__select--small" [value]="translationLanguage()" (change)="onTranslationLanguageChange($any($event.target).value)">
+                @for (lang of translationLanguageOptions; track lang) {
+                  <option [value]="lang">{{ languageService.t('shadowing.session.translationLang.' + lang) }}</option>
+                }
+              </select>
+            }
+          </div>
+
+          @if (showTranslation() && sceneTranslation(scene); as translation) {
+            <p class="session__phrase-translation">{{ translation }}</p>
           }
 
           @if (phase() === 'comprehension') {

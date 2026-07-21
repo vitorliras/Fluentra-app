@@ -6,11 +6,14 @@ interface YouTubePlayer {
   pauseVideo(): void;
   setPlaybackRate(rate: number): void;
   getCurrentTime(): number;
+  getIframe(): HTMLIFrameElement;
   destroy(): void;
 }
 
 interface YouTubePlayerOptions {
   videoId: string;
+  width: string;
+  height: string;
   playerVars: Record<string, number>;
   events: {
     onReady: () => void;
@@ -73,13 +76,21 @@ export class YoutubePlayerService {
     await new Promise<void>((resolve, reject) => {
       this.player = new window.YT!.Player(mount, {
         videoId: youTubeVideoId,
-        playerVars: { controls: 0, disablekb: 1, modestbranding: 1 },
+        width: '100%',
+        height: '100%',
+        playerVars: { controls: 0, disablekb: 1, modestbranding: 1, rel: 0 },
         events: {
           onReady: () => this.zone.run(() => resolve()),
           onError: () => this.zone.run(() => reject(new Error('YouTubePlayerError'))),
         },
       });
     });
+
+    const iframe = this.player!.getIframe();
+    iframe.style.position = 'absolute';
+    iframe.style.inset = '0';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
   }
 
   playClip(startSeconds: number, endSeconds: number, onTick: (currentSeconds: number) => void, onEnded: () => void): void {

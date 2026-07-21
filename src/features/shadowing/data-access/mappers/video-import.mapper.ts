@@ -5,7 +5,7 @@ export function toScene(dto: SceneItemDto): Scene {
   return {
     id: dto.id,
     text: dto.text,
-    translation: dto.translation,
+    translations: dto.translations,
     startSeconds: dto.startSeconds,
     endSeconds: dto.endSeconds,
     sequenceOrder: dto.sequenceOrder,

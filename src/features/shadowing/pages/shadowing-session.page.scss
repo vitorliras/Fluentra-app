@@ -183,6 +183,9 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 16 / 9;
+  max-width: 42rem;
+  max-height: 23.625rem;
+  margin-inline: auto;
   margin-bottom: var(--space-5);
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--brand-900), var(--brand-700));
@@ -233,6 +236,32 @@
   font-size: var(--font-size-xl);
   font-weight: 700;
   line-height: 1.4;
+}
+
+.session__support-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.session__support-toggle {
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.session__select--small {
+  height: 2rem;
+  font-size: 0.8125rem;
 }
 
 .session__phrase-translation {
