@@ -46,6 +46,7 @@ export class VideoSearchBarComponent {
   protected readonly results = signal<VideoSearchResult[] | null>(null);
   protected readonly singleResult = signal<VideoSearchResult | null>(null);
   protected readonly errorKey = signal<string | null>(null);
+  protected readonly durationMinutes = signal(DEFAULT_DURATION_MINUTES);
   protected readonly recommendedPlaceholder = RECOMMENDED_PLACEHOLDER;
 
   readonly videoSelected = output<VideoSearchResult>();
@@ -77,6 +78,13 @@ export class VideoSearchBarComponent {
 
   protected onSubmit(): void {
     this.executeSearch();
+  }
+
+  protected onDurationInput(value: string): void {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      this.durationMinutes.set(parsed);
+    }
   }
 
   protected onBlur(): void {
@@ -111,7 +119,7 @@ export class VideoSearchBarComponent {
     this.singleResult.set(null);
 
     this.gateway
-      .searchVideos({ subject: value, desiredDurationMinutes: DEFAULT_DURATION_MINUTES })
+      .searchVideos({ subject: value, desiredDurationMinutes: this.durationMinutes() })
       .subscribe((result) => {
         this.isLoading.set(false);
 

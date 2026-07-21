@@ -115,6 +115,7 @@
     "reviewNow": "Réviser maintenant",
     "search": {
       "placeholder": "Rechercher des leçons, mots, exercices…",
+      "durationLabel": "Durée (min)",
       "loading": "Recherche...",
       "noResults": "Aucune vidéo trouvée pour cette recherche.",
       "recommended": "Recommandées pour toi",

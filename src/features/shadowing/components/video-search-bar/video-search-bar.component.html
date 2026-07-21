@@ -1,19 +1,33 @@
 <div class="video-search">
-  <div class="video-search__field">
-    <svg class="video-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-    <input
-      type="text"
-      class="video-search__input"
-      [value]="query()"
-      (input)="onInput($any($event.target).value)"
-      (focus)="onFocus()"
-      (keydown.enter)="onSubmit()"
-      (blur)="onBlur()"
-      [placeholder]="languageService.t('shadowing.search.placeholder')"
-    />
+  <div class="video-search__row">
+    <div class="video-search__field">
+      <svg class="video-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m21 21-4.3-4.3" />
+      </svg>
+      <input
+        type="text"
+        class="video-search__input"
+        [value]="query()"
+        (input)="onInput($any($event.target).value)"
+        (focus)="onFocus()"
+        (keydown.enter)="onSubmit()"
+        (blur)="onBlur()"
+        [placeholder]="languageService.t('shadowing.search.placeholder')"
+      />
+    </div>
+
+    <label class="video-search__duration">
+      <span class="video-search__duration-label">{{ languageService.t('shadowing.search.durationLabel') }}</span>
+      <input
+        type="number"
+        class="video-search__duration-input"
+        min="1"
+        max="120"
+        [value]="durationMinutes()"
+        (input)="onDurationInput($any($event.target).value)"
+      />
+    </label>
   </div>
 
   @if (dropdownOpen()) {

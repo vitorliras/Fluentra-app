@@ -4,10 +4,48 @@
   flex: 1;
 }
 
+.video-search__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .video-search__field {
   position: relative;
   display: flex;
   align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.video-search__duration {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+  height: 2.75rem;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.video-search__duration-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-foreground-muted);
+  white-space: nowrap;
+}
+
+.video-search__duration-input {
+  width: 3rem;
+  border: none;
+  background: none;
+  color: var(--color-foreground);
+  font-size: var(--font-size-sm);
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .video-search__icon {
