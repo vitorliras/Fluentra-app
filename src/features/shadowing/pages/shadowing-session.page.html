@@ -14,7 +14,7 @@
       </button>
       <div>
         <p class="session__eyebrow">{{ languageService.t('shadowing.eyebrow') }}</p>
-        <h1 class="session__title">Shadowing for Daily Life</h1>
+        <h1 class="session__title">{{ selectedVideo()?.title ?? languageService.t('shadowing.session.noVideoTitle') }}</h1>
       </div>
     </div>
 
@@ -32,138 +32,139 @@
     <app-history-dropdown />
   </div>
 
-  <div class="session__progress-row">
-    <span class="session__progress-label">{{ languageService.t('shadowing.progress') }}</span>
-    <div class="session__progress-bar">
-      <span class="session__progress-fill" style="width: 16.6%"></span>
+  @if (scenes().length > 0) {
+    <div class="session__progress-row">
+      <span class="session__progress-label">{{ languageService.t('shadowing.progress') }}</span>
+      <div class="session__progress-bar">
+        <span class="session__progress-fill" [style.width.%]="(completedSceneIds().size / scenes().length) * 100"></span>
+      </div>
+      <span class="session__progress-count">{{ completedSceneIds().size }}/{{ scenes().length }} {{ languageService.t('shadowing.mastered') }}</span>
     </div>
-    <span class="session__progress-count">1/6 {{ languageService.t('shadowing.mastered') }}</span>
-  </div>
+  }
+
+  @if (errorKey()) {
+    <p class="session__error">{{ languageService.t(errorKey()!) }}</p>
+  }
 
   <div class="session__body">
     <div class="session__main">
       <div class="session__card">
-        <div class="session__card-top">
-          <div class="session__card-top-left">
-            <span class="session__phrase-index">{{ languageService.t('shadowing.phrase') }} 1 {{ languageService.t('shadowing.of') }} 6</span>
-            <button type="button" class="session__phonetics-toggle" tabindex="-1" aria-disabled="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              {{ languageService.t('shadowing.hidePhonetics') }}
-            </button>
+        @if (scenes().length > 0) {
+          <div class="session__card-top">
+            <span class="session__phrase-index">
+              {{ languageService.t('shadowing.phrase') }} {{ currentSceneIndex() + 1 }} {{ languageService.t('shadowing.of') }} {{ scenes().length }}
+            </span>
           </div>
-          <span class="session__level-dot">● A2</span>
-        </div>
+        }
 
-        <div class="session__video">
+        <div class="session__video" [class.session__video--hidden]="!selectedVideo()">
+          <div #videoFrameHost class="session__video-frame"></div>
           @if (selectedVideo(); as video) {
-            <img class="session__video-thumb" [src]="video.thumbnailUrl" alt="" />
             <span class="session__video-source">{{ video.title }}</span>
-          } @else {
-            <span class="session__video-source">Fluent English Stories</span>
           }
-          <button type="button" class="session__play" tabindex="-1" aria-disabled="true">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </button>
         </div>
 
-        <p class="session__phrase-text">
-          Shadowing <span class="session__phrase-highlight">is</span> not only for songs or movies, you can also use
-          it for daily life English.
-        </p>
-        <p class="session__phrase-ipa">{{ phrases[0].phonetic }}</p>
-        @for (line of translationLines(phrases[0].translation); track $index) {
-          <p class="session__phrase-translation">{{ line }}</p>
+        @if (!selectedVideo()) {
+          <p class="session__placeholder">{{ languageService.t('shadowing.session.selectPrompt') }}</p>
+        } @else if (phase() === 'importing') {
+          <p class="session__placeholder">{{ languageService.t('shadowing.session.importing') }}</p>
+        } @else if (currentScene(); as scene) {
+          <p class="session__phrase-text">{{ scene.text }}</p>
+
+          @if (phase() === 'comprehension') {
+            <div class="session__comprehension">
+              <span>{{ languageService.t('shadowing.session.comprehensionLabel') }}</span>
+              <div class="session__comprehension-bar">
+                <span class="session__comprehension-fill" [style.width.%]="comprehensionPercent()"></span>
+              </div>
+            </div>
+          }
+        } @else if (phase() === 'completed') {
+          <p class="session__placeholder">{{ languageService.t('shadowing.session.completedLabel') }}</p>
         }
       </div>
 
-      <div class="session__card">
-        <div class="session__card-top">
-          <span>{{ languageService.t('shadowing.pronunciationTitle') }}</span>
-          <span class="session__accuracy">87% {{ languageService.t('shadowing.accuracy') }}</span>
-        </div>
+      @if (selectedVideo() && currentScene()) {
+        <div class="session__card">
+          <div class="session__card-top">
+            <span>{{ languageService.t('shadowing.pronunciationTitle') }}</span>
+            @if (lastEvaluation(); as evaluation) {
+              <span class="session__accuracy">{{ (evaluation.accuracyRate * 100) | number: '1.0-0' }}% {{ languageService.t('shadowing.accuracy') }}</span>
+            }
+          </div>
 
-        <div class="session__waveform-row">
-          <span class="session__waveform-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 14v-3a9 9 0 0 1 18 0v3" />
-              <path d="M21 14a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h3ZM3 14a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2H3Z" />
-            </svg>
-            {{ languageService.t('shadowing.native') }}
-          </span>
-          <span class="session__waveform" aria-hidden="true"></span>
-        </div>
-        <div class="session__waveform-row">
-          <span class="session__waveform-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-              <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M9 22h6" />
-            </svg>
-            {{ languageService.t('shadowing.you') }}
-          </span>
-          <span class="session__waveform session__waveform--user" aria-hidden="true"></span>
-        </div>
+          <div class="session__waveform-row">
+            <span class="session__waveform-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 14v-3a9 9 0 0 1 18 0v3" />
+                <path d="M21 14a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h3ZM3 14a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2H3Z" />
+              </svg>
+              {{ languageService.t('shadowing.native') }}
+            </span>
+            <span class="session__waveform" [class.session__waveform--active]="phase() === 'playing' || phase() === 'comprehension'" aria-hidden="true"></span>
+          </div>
+          <div class="session__waveform-row">
+            <span class="session__waveform-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M9 22h6" />
+              </svg>
+              {{ languageService.t('shadowing.you') }}
+            </span>
+            <span class="session__waveform session__waveform--user" [class.session__waveform--active]="phase() === 'recording'" aria-hidden="true"></span>
+          </div>
 
-        <div class="session__controls">
-          <button type="button" class="session__control-play" tabindex="-1" aria-disabled="true">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </button>
-          <button type="button" class="btn session__record" tabindex="-1" aria-disabled="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-              <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M9 22h6" />
-            </svg>
-            {{ languageService.t('shadowing.record') }}
-          </button>
-          <span class="session__speed" tabindex="-1" aria-disabled="true">{{ languageService.t('shadowing.speed') }}: 0.8x ▾</span>
-          <button type="button" class="session__next" tabindex="-1" aria-disabled="true">
-            {{ languageService.t('shadowing.nextPhrase') }} →
-          </button>
+          @if (lastEvaluation(); as evaluation) {
+            <div class="session__feedback">
+              @for (word of evaluation.words; track $index) {
+                <span class="session__feedback-word" [class]="'session__feedback-word--' + word.mark.toLowerCase()">{{ word.targetWord }}</span>
+              }
+            </div>
+          }
+
+          <div class="session__status-row">
+            <span class="session__status" [class]="'session__status--' + phase()">
+              @switch (phase()) {
+                @case ('comprehension') { {{ languageService.t('shadowing.session.micDisabled') }} }
+                @case ('playing') { {{ languageService.t('shadowing.session.playingLabel') }} }
+                @case ('recording') { {{ languageService.t('shadowing.session.recordingLabel') }} }
+                @case ('evaluating') { {{ languageService.t('shadowing.session.evaluatingLabel') }} }
+                @case ('feedback') {
+                  @if (lastEvaluation()?.shouldRepeat) {
+                    {{ languageService.t('shadowing.session.repeatLabel') }}
+                  } @else {
+                    {{ languageService.t('shadowing.session.advanceLabel') }}
+                  }
+                }
+              }
+            </span>
+          </div>
         </div>
-      </div>
+      }
     </div>
 
     <aside class="session__aside">
-      <div class="session__card">
-        <p class="session__aside-title">{{ languageService.t('shadowing.phraseList') }}</p>
-        <ul class="session__phrase-list">
-          @for (phrase of phrases; track $index) {
-            <li class="session__phrase-item" [class.session__phrase-item--done]="phrase.done">
-              <span class="session__phrase-marker">
-                @if (phrase.done) {
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                } @else {
-                  {{ $index + 1 }}
-                }
-              </span>
-              <span class="session__phrase-item-text">{{ phrase.text }}</span>
-            </li>
-          }
-        </ul>
-      </div>
-
-      <div class="session__card session__card--accent">
-        <p class="session__aside-title">{{ languageService.t('shadowing.nextUpTitle') }}</p>
-        <p class="session__next-up-text">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 6.5C10 5 7 4 4 4v14c3 0 6 1 8 2.5V6.5Z" />
-            <path d="M12 6.5c2-1.5 5-2.5 8-2.5v14c-3 0-6 1-8 2.5V6.5Z" />
-          </svg>
-          {{ languageService.t('shadowing.nextUpVocabulary') }}
-        </p>
-        <p class="session__next-up-description">{{ languageService.t('shadowing.nextUpDescription') }}</p>
-        <button type="button" class="btn session__review-btn" tabindex="-1" aria-disabled="true">
-          {{ languageService.t('shadowing.reviewNow') }} →
-        </button>
-      </div>
+      @if (scenes().length > 0) {
+        <div class="session__card">
+          <p class="session__aside-title">{{ languageService.t('shadowing.phraseList') }}</p>
+          <ul class="session__phrase-list">
+            @for (scene of scenes(); track scene.id; let i = $index) {
+              <li class="session__phrase-item" [class.session__phrase-item--done]="completedSceneIds().has(scene.id)">
+                <span class="session__phrase-marker">
+                  @if (completedSceneIds().has(scene.id)) {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  } @else {
+                    {{ i + 1 }}
+                  }
+                </span>
+                <span class="session__phrase-item-text">{{ scene.text }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
     </aside>
   </div>
 </div>

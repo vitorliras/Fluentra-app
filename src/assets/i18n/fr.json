@@ -104,21 +104,12 @@
     "accuracy": "précision",
     "native": "Natif",
     "you": "Toi",
-    "record": "Enregistrer",
-    "hidePhonetics": "Masquer la phonétique",
-    "speed": "Vitesse",
-    "nextPhrase": "Phrase suivante",
     "phraseList": "Phrases de la leçon",
-    "nextUpTitle": "À suivre pour toi",
-    "nextUpVocabulary": "Vocabulaire : \"shadowing\", \"confident\", \"naturally\"",
-    "nextUpDescription": "3 mots de cette leçon sont entrés dans ta révision espacée d'aujourd'hui.",
-    "reviewNow": "Réviser maintenant",
     "search": {
       "placeholder": "Rechercher des leçons, mots, exercices…",
       "durationLabel": "Durée (min)",
       "loading": "Recherche...",
       "noResults": "Aucune vidéo trouvée pour cette recherche.",
-      "recommended": "Recommandées pour toi",
       "views": "vues",
       "likes": "j'aime",
       "errors": {
@@ -126,7 +117,28 @@
         "invalidUrl": "Ce lien ne ressemble pas à une vidéo YouTube valide.",
         "videoNotFound": "Nous n'avons pas trouvé cette vidéo.",
         "videoNotEligible": "Cette vidéo n'a pas de sous-titres en anglais disponibles.",
-        "quotaExhausted": "Limite quotidienne de recherche atteinte. Réessaie demain."
+        "quotaExhausted": "Limite quotidienne de recherche atteinte. Réessaie demain.",
+        "unexpected": "Une erreur est survenue. Réessaie."
+      }
+    },
+    "session": {
+      "noVideoTitle": "Choisis une vidéo à pratiquer",
+      "selectPrompt": "Recherche une vidéo ci-dessus pour commencer à pratiquer.",
+      "importing": "Préparation de la vidéo et découpage en phrases…",
+      "comprehensionLabel": "Écoute et lis simplement — le micro se débloque dans un instant",
+      "micDisabled": "Micro désactivé",
+      "playingLabel": "Écoute la phrase",
+      "recordingLabel": "Parle maintenant",
+      "evaluatingLabel": "Évaluation de ta prononciation…",
+      "repeatLabel": "Répétons cette phrase",
+      "advanceLabel": "Bien joué ! Phrase suivante",
+      "completedLabel": "Tu as terminé toutes les phrases de cette vidéo.",
+      "errors": {
+        "importFailed": "Impossible de préparer cette vidéo pour le moment. Réessaie.",
+        "playbackFailed": "Cette vidéo ne peut pas être lue ici (intégration désactivée par l'auteur). Essaie une autre vidéo.",
+        "microphoneDenied": "Nous n'avons pas pu accéder à ton micro. Vérifie la permission du navigateur.",
+        "noSpeechDetected": "Nous ne t'avons pas entendu. Réessayons.",
+        "evaluateFailed": "Impossible d'évaluer ta prononciation pour le moment. Réessayons."
       }
     }
   }

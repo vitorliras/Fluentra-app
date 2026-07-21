@@ -104,21 +104,12 @@
     "accuracy": "precisión",
     "native": "Nativo",
     "you": "Tú",
-    "record": "Grabar",
-    "hidePhonetics": "Ocultar fonética",
-    "speed": "Velocidad",
-    "nextPhrase": "Siguiente frase",
     "phraseList": "Frases de la lección",
-    "nextUpTitle": "A continuación para ti",
-    "nextUpVocabulary": "Vocabulario: \"shadowing\", \"confident\", \"naturally\"",
-    "nextUpDescription": "3 palabras de esta lección entraron en tu repaso espaciado de hoy.",
-    "reviewNow": "Repasar ahora",
     "search": {
       "placeholder": "Buscar lecciones, palabras, ejercicios…",
       "durationLabel": "Duración (min)",
       "loading": "Buscando...",
       "noResults": "No se encontraron vídeos para esta búsqueda.",
-      "recommended": "Recomendados para ti",
       "views": "visualizaciones",
       "likes": "me gusta",
       "errors": {
@@ -126,7 +117,28 @@
         "invalidUrl": "Ese enlace no parece ser un vídeo válido de YouTube.",
         "videoNotFound": "No encontramos ese vídeo.",
         "videoNotEligible": "Ese vídeo no tiene subtítulos en inglés disponibles.",
-        "quotaExhausted": "Límite diario de búsqueda alcanzado. Inténtalo mañana."
+        "quotaExhausted": "Límite diario de búsqueda alcanzado. Inténtalo mañana.",
+        "unexpected": "Algo salió mal. Inténtalo de nuevo."
+      }
+    },
+    "session": {
+      "noVideoTitle": "Elige un vídeo para practicar",
+      "selectPrompt": "Busca un vídeo arriba para empezar a practicar.",
+      "importing": "Preparando el vídeo y separando las frases…",
+      "comprehensionLabel": "Solo escucha y lee — el micrófono se activa en un momento",
+      "micDisabled": "Micrófono desactivado",
+      "playingLabel": "Escucha la frase",
+      "recordingLabel": "Habla ahora",
+      "evaluatingLabel": "Evaluando tu pronunciación…",
+      "repeatLabel": "Repitamos esta frase",
+      "advanceLabel": "¡Bien hecho! Siguiente frase",
+      "completedLabel": "Terminaste todas las frases de este vídeo.",
+      "errors": {
+        "importFailed": "No fue posible preparar este vídeo ahora. Inténtalo de nuevo.",
+        "playbackFailed": "Este vídeo no se puede reproducir aquí (inserción desactivada por el autor). Prueba con otro vídeo.",
+        "microphoneDenied": "No pudimos acceder a tu micrófono. Revisa el permiso del navegador.",
+        "noSpeechDetected": "No pudimos escucharte. Intentémoslo de nuevo.",
+        "evaluateFailed": "No fue posible evaluar tu pronunciación ahora. Intentémoslo de nuevo."
       }
     }
   }

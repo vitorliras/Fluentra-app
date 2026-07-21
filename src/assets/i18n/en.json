@@ -104,21 +104,12 @@
     "accuracy": "accuracy",
     "native": "Native",
     "you": "You",
-    "record": "Record",
-    "hidePhonetics": "Hide phonetics",
-    "speed": "Speed",
-    "nextPhrase": "Next phrase",
     "phraseList": "Lesson phrases",
-    "nextUpTitle": "Coming up for you",
-    "nextUpVocabulary": "Vocabulary: \"shadowing\", \"confident\", \"naturally\"",
-    "nextUpDescription": "3 words from this lesson entered your spaced review for today.",
-    "reviewNow": "Review now",
     "search": {
       "placeholder": "Search lessons, words, exercises…",
       "durationLabel": "Duration (min)",
       "loading": "Searching...",
       "noResults": "No videos found for this search.",
-      "recommended": "Recommended for you",
       "views": "views",
       "likes": "likes",
       "errors": {
@@ -126,7 +117,28 @@
         "invalidUrl": "That link doesn't look like a valid YouTube video.",
         "videoNotFound": "We couldn't find that video.",
         "videoNotEligible": "This video doesn't have English captions available.",
-        "quotaExhausted": "Daily search limit reached. Try again tomorrow."
+        "quotaExhausted": "Daily search limit reached. Try again tomorrow.",
+        "unexpected": "Something went wrong. Please try again."
+      }
+    },
+    "session": {
+      "noVideoTitle": "Choose a video to practice",
+      "selectPrompt": "Search for a video above to start practicing.",
+      "importing": "Preparing the video and splitting it into phrases…",
+      "comprehensionLabel": "Just listen and read — the microphone unlocks in a moment",
+      "micDisabled": "Microphone disabled",
+      "playingLabel": "Listen to the phrase",
+      "recordingLabel": "Speak now",
+      "evaluatingLabel": "Evaluating your pronunciation…",
+      "repeatLabel": "Let's repeat this phrase",
+      "advanceLabel": "Nice work! Next phrase",
+      "completedLabel": "You've finished every phrase in this video.",
+      "errors": {
+        "importFailed": "Couldn't prepare this video right now. Please try again.",
+        "playbackFailed": "This video can't be played here (embedding disabled by the uploader). Try another video.",
+        "microphoneDenied": "We couldn't access your microphone. Check your browser permission.",
+        "noSpeechDetected": "We couldn't hear you. Let's try again.",
+        "evaluateFailed": "Couldn't evaluate your pronunciation right now. Let's try again."
       }
     }
   }
