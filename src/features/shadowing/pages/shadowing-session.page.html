@@ -69,7 +69,16 @@
         } @else if (phase() === 'importing') {
           <p class="session__placeholder">{{ languageService.t('shadowing.session.importing') }}</p>
         } @else if (currentScene(); as scene) {
-          <p class="session__phrase-text">{{ scene.text }}</p>
+          <p class="session__phrase-text">
+            @for (word of sceneWords(scene); track $index) {
+              <span class="session__word" [class.session__word--active]="$index === highlightedWordIndex()">{{ word }}</span>
+              @if (!$last) {<span> </span>}
+            }
+          </p>
+
+          @if (scene.translation) {
+            <p class="session__phrase-translation">{{ scene.translation }}</p>
+          }
 
           @if (phase() === 'comprehension') {
             <div class="session__comprehension">
@@ -79,6 +88,66 @@
               </div>
             </div>
           }
+
+          <div class="session__controls">
+            <button type="button" class="session__control-btn" (click)="onRestartClick()" [attr.aria-label]="languageService.t('shadowing.session.restart')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+            </button>
+
+            <button type="button" class="session__control-btn session__control-btn--primary" (click)="onPlayPauseClick()">
+              @if (isPlaying()) {
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" /><rect x="14" y="5" width="4" height="14" /></svg>
+              } @else {
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+              }
+            </button>
+
+            <button type="button" class="session__control-btn" (click)="onNextClick()" [attr.aria-label]="languageService.t('shadowing.session.next')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m5 4 12 8-12 8V4Z" />
+                <path d="M19 5v14" />
+              </svg>
+            </button>
+
+            <select class="session__select" [value]="speed()" (change)="onSpeedChange($any($event.target).value)">
+              @for (option of speedOptions; track option) {
+                <option [value]="option">{{ option }}x</option>
+              }
+            </select>
+
+            <select class="session__select" [value]="repeatCount()" (change)="onRepeatCountChange($any($event.target).value)">
+              @for (option of repeatCountOptions; track option) {
+                <option [value]="option">{{ languageService.t('shadowing.session.repeatCount') }} ×{{ option }}</option>
+              }
+            </select>
+
+            <select class="session__select" [value]="waitModePercent()" (change)="onWaitModeChange($any($event.target).value)">
+              @for (option of waitModeOptions; track option) {
+                <option [value]="option">{{ languageService.t('shadowing.session.waitMode') }} +{{ option }}%</option>
+              }
+            </select>
+
+            <button
+              type="button"
+              class="session__record-btn"
+              [class.session__record-btn--recording]="phase() === 'recording'"
+              [disabled]="phase() !== 'ready'"
+              (click)="onRecordClick()"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M9 22h6" />
+              </svg>
+              @if (phase() === 'recording') {
+                {{ languageService.t('shadowing.session.recordingLabel') }}
+              } @else {
+                {{ languageService.t('shadowing.session.recordButton') }}
+              }
+            </button>
+          </div>
         } @else if (phase() === 'completed') {
           <p class="session__placeholder">{{ languageService.t('shadowing.session.completedLabel') }}</p>
         }
@@ -93,27 +162,6 @@
             }
           </div>
 
-          <div class="session__waveform-row">
-            <span class="session__waveform-label">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M3 14v-3a9 9 0 0 1 18 0v3" />
-                <path d="M21 14a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h3ZM3 14a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2H3Z" />
-              </svg>
-              {{ languageService.t('shadowing.native') }}
-            </span>
-            <span class="session__waveform" [class.session__waveform--active]="phase() === 'playing' || phase() === 'comprehension'" aria-hidden="true"></span>
-          </div>
-          <div class="session__waveform-row">
-            <span class="session__waveform-label">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M9 22h6" />
-              </svg>
-              {{ languageService.t('shadowing.you') }}
-            </span>
-            <span class="session__waveform session__waveform--user" [class.session__waveform--active]="phase() === 'recording'" aria-hidden="true"></span>
-          </div>
-
           @if (lastEvaluation(); as evaluation) {
             <div class="session__feedback">
               @for (word of evaluation.words; track $index) {
@@ -126,7 +174,7 @@
             <span class="session__status" [class]="'session__status--' + phase()">
               @switch (phase()) {
                 @case ('comprehension') { {{ languageService.t('shadowing.session.micDisabled') }} }
-                @case ('playing') { {{ languageService.t('shadowing.session.playingLabel') }} }
+                @case ('ready') { {{ languageService.t('shadowing.session.readyLabel') }} }
                 @case ('recording') { {{ languageService.t('shadowing.session.recordingLabel') }} }
                 @case ('evaluating') { {{ languageService.t('shadowing.session.evaluatingLabel') }} }
                 @case ('feedback') {
@@ -149,17 +197,25 @@
           <p class="session__aside-title">{{ languageService.t('shadowing.phraseList') }}</p>
           <ul class="session__phrase-list">
             @for (scene of scenes(); track scene.id; let i = $index) {
-              <li class="session__phrase-item" [class.session__phrase-item--done]="completedSceneIds().has(scene.id)">
-                <span class="session__phrase-marker">
-                  @if (completedSceneIds().has(scene.id)) {
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
-                  } @else {
-                    {{ i + 1 }}
-                  }
-                </span>
-                <span class="session__phrase-item-text">{{ scene.text }}</span>
+              <li>
+                <button
+                  type="button"
+                  class="session__phrase-item"
+                  [class.session__phrase-item--done]="completedSceneIds().has(scene.id)"
+                  [class.session__phrase-item--current]="i === currentSceneIndex()"
+                  (click)="onPhraseClick(i)"
+                >
+                  <span class="session__phrase-marker">
+                    @if (completedSceneIds().has(scene.id)) {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                    } @else {
+                      {{ i + 1 }}
+                    }
+                  </span>
+                  <span class="session__phrase-item-text">{{ scene.text }}</span>
+                </button>
               </li>
             }
           </ul>

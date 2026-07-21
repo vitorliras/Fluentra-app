@@ -18,7 +18,7 @@ type SessionPhase =
   | 'idle'
   | 'importing'
   | 'comprehension'
-  | 'playing'
+  | 'ready'
   | 'recording'
   | 'evaluating'
   | 'feedback'
@@ -26,9 +26,9 @@ type SessionPhase =
 
 const COMPREHENSION_SECONDS = 5;
 const FEEDBACK_DISPLAY_MS = 2500;
-const MIN_RECORDING_MS = 3000;
-const RECORDING_MS_PER_WORD = 600;
-const MAX_RECORDING_MS = 15000;
+const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5];
+const REPEAT_COUNT_OPTIONS = [1, 2, 3, 4];
+const WAIT_MODE_OPTIONS = [0, 25, 50, 75, 100];
 
 @Component({
   selector: 'app-shadowing-session-page',
@@ -53,6 +53,10 @@ export class ShadowingSessionPage {
 
   @ViewChild('videoFrameHost') private videoFrameHost!: ElementRef<HTMLDivElement>;
 
+  protected readonly speedOptions = SPEED_OPTIONS;
+  protected readonly repeatCountOptions = REPEAT_COUNT_OPTIONS;
+  protected readonly waitModeOptions = WAIT_MODE_OPTIONS;
+
   protected readonly selectedVideo = signal<VideoSearchResult | null>(null);
   protected readonly scenes = signal<Scene[]>([]);
   protected readonly currentSceneIndex = signal(0);
@@ -61,14 +65,46 @@ export class ShadowingSessionPage {
   protected readonly lastEvaluation = signal<PronunciationEvaluation | null>(null);
   protected readonly completedSceneIds = signal<Set<number>>(new Set());
   protected readonly errorKey = signal<string | null>(null);
+  protected readonly isPlaying = signal(false);
+  protected readonly currentPlaybackSeconds = signal(0);
+  protected readonly speed = signal(1);
+  protected readonly repeatCount = signal(1);
+  protected readonly waitModePercent = signal(50);
 
   private readonly seenSceneIds = new Set<number>();
+  private readonly sceneAttemptCounts = new Map<number, number>();
+  private comprehensionInterval: ReturnType<typeof setInterval> | null = null;
 
   protected readonly currentScene = computed<Scene | null>(() => this.scenes()[this.currentSceneIndex()] ?? null);
 
   protected readonly comprehensionPercent = computed(
     () => (this.comprehensionSecondsLeft() / COMPREHENSION_SECONDS) * 100,
   );
+
+  protected readonly highlightedWordIndex = computed<number>(() => {
+    const scene = this.currentScene();
+    if (!scene) {
+      return -1;
+    }
+
+    const words = scene.text.split(' ').filter(Boolean);
+    const sceneDuration = scene.endSeconds - scene.startSeconds;
+    if (words.length === 0 || sceneDuration <= 0) {
+      return -1;
+    }
+
+    const elapsed = this.currentPlaybackSeconds() - scene.startSeconds;
+    if (elapsed < 0) {
+      return -1;
+    }
+
+    const perWord = sceneDuration / words.length;
+    return Math.min(words.length - 1, Math.floor(elapsed / perWord));
+  });
+
+  protected sceneWords(scene: Scene): string[] {
+    return scene.text.split(' ').filter(Boolean);
+  }
 
   protected async onVideoSelected(video: VideoSearchResult): Promise<void> {
     this.selectedVideo.set(video);
@@ -77,6 +113,7 @@ export class ShadowingSessionPage {
     this.scenes.set([]);
     this.completedSceneIds.set(new Set());
     this.seenSceneIds.clear();
+    this.sceneAttemptCounts.clear();
 
     this.gateway.importVideo({ youTubeVideoId: video.youTubeVideoId }).subscribe(async (result) => {
       if (!result.isSuccess || !result.value) {
@@ -96,8 +133,87 @@ export class ShadowingSessionPage {
         return;
       }
 
+      this.youtubePlayer.setPlaybackRate(this.speed());
       this.beginScene();
     });
+  }
+
+  protected onSpeedChange(value: string): void {
+    const rate = Number(value);
+    this.speed.set(rate);
+    this.youtubePlayer.setPlaybackRate(rate);
+  }
+
+  protected onRepeatCountChange(value: string): void {
+    this.repeatCount.set(Number(value));
+  }
+
+  protected onWaitModeChange(value: string): void {
+    this.waitModePercent.set(Number(value));
+  }
+
+  protected onPlayPauseClick(): void {
+    if (this.isPlaying()) {
+      this.youtubePlayer.pause();
+      this.isPlaying.set(false);
+      return;
+    }
+
+    this.youtubePlayer.resume();
+    this.isPlaying.set(true);
+  }
+
+  private isBusyPhase(): boolean {
+    const phase = this.phase();
+    return phase === 'recording' || phase === 'evaluating' || phase === 'feedback';
+  }
+
+  protected onRestartClick(): void {
+    const scene = this.currentScene();
+    if (!scene || this.isBusyPhase()) {
+      return;
+    }
+
+    this.playCurrentClip(scene, this.phase() === 'comprehension');
+  }
+
+  protected onNextClick(): void {
+    const scene = this.currentScene();
+    if (!scene || this.isBusyPhase()) {
+      return;
+    }
+
+    this.completedSceneIds.update((ids) => new Set(ids).add(scene.id));
+    this.advanceToNextScene();
+  }
+
+  protected onPhraseClick(index: number): void {
+    if (this.isBusyPhase()) {
+      return;
+    }
+
+    this.currentSceneIndex.set(index);
+    this.beginScene();
+  }
+
+  protected async onRecordClick(): Promise<void> {
+    const scene = this.currentScene();
+    if (!scene || this.phase() !== 'ready') {
+      return;
+    }
+
+    this.phase.set('recording');
+    this.errorKey.set(null);
+
+    const sceneDurationMs = (scene.endSeconds - scene.startSeconds) * 1000;
+    const maxDurationMs = sceneDurationMs * (1 + this.waitModePercent() / 100);
+
+    try {
+      await this.audioRecorder.start(maxDurationMs, (audio) => this.onRecordingStopped(audio));
+    } catch {
+      this.errorKey.set('shadowing.session.errors.microphoneDenied');
+      this.phase.set('ready');
+    }
   }
 
   private beginScene(): void {
@@ -108,55 +224,52 @@ export class ShadowingSessionPage {
     }
 
     this.lastEvaluation.set(null);
+    this.errorKey.set(null);
     const firstExposure = !this.seenSceneIds.has(scene.id);
     this.seenSceneIds.add(scene.id);
 
-    if (firstExposure) {
-      this.phase.set('comprehension');
-      this.youtubePlayer.playClip(scene.startSeconds, scene.endSeconds, () => this.runComprehensionCountdown());
-      return;
-    }
-
-    this.beginRepetitionRound(scene);
+    this.playCurrentClip(scene, firstExposure);
   }
 
-  private runComprehensionCountdown(): void {
-    this.comprehensionSecondsLeft.set(COMPREHENSION_SECONDS);
+  private playCurrentClip(scene: Scene, isComprehension: boolean): void {
+    this.clearComprehensionInterval();
+    this.phase.set(isComprehension ? 'comprehension' : 'ready');
+    this.isPlaying.set(true);
 
-    const interval = setInterval(() => {
+    this.youtubePlayer.playClip(
+      scene.startSeconds,
+      scene.endSeconds,
+      (currentSeconds) => this.currentPlaybackSeconds.set(currentSeconds),
+      () => {
+        this.isPlaying.set(false);
+        if (isComprehension) {
+          this.runComprehensionCountdown(scene);
+        } else {
+          this.phase.set('ready');
+        }
+      },
+    );
+  }
+
+  private runComprehensionCountdown(scene: Scene): void {
+    this.comprehensionSecondsLeft.set(COMPREHENSION_SECONDS);
+    this.clearComprehensionInterval();
+
+    this.comprehensionInterval = setInterval(() => {
       const remaining = this.comprehensionSecondsLeft() - 1;
       this.comprehensionSecondsLeft.set(remaining);
 
       if (remaining <= 0) {
-        clearInterval(interval);
-        const scene = this.currentScene();
-        if (scene) {
-          this.beginRepetitionRound(scene);
-        }
+        this.clearComprehensionInterval();
+        this.playCurrentClip(scene, false);
       }
     }, 1000);
   }
 
-  private beginRepetitionRound(scene: Scene): void {
-    this.phase.set('playing');
-    this.youtubePlayer.playClip(scene.startSeconds, scene.endSeconds, () => this.startRecording());
-  }
-
-  private async startRecording(): Promise<void> {
-    const scene = this.currentScene();
-    if (!scene) {
-      return;
-    }
-
-    this.phase.set('recording');
-    const wordCount = scene.text.split(' ').filter(Boolean).length;
-    const maxDurationMs = Math.min(MAX_RECORDING_MS, MIN_RECORDING_MS + wordCount * RECORDING_MS_PER_WORD);
-
-    try {
-      await this.audioRecorder.start(maxDurationMs, (audio) => this.onRecordingStopped(audio));
-    } catch {
-      this.errorKey.set('shadowing.session.errors.microphoneDenied');
-      this.phase.set('idle');
+  private clearComprehensionInterval(): void {
+    if (this.comprehensionInterval !== null) {
+      clearInterval(this.comprehensionInterval);
+      this.comprehensionInterval = null;
     }
   }
 
@@ -166,12 +279,17 @@ export class ShadowingSessionPage {
       return;
     }
 
+    this.sceneAttemptCounts.set(scene.id, (this.sceneAttemptCounts.get(scene.id) ?? 0) + 1);
     this.phase.set('evaluating');
 
     this.gateway.evaluatePronunciation(audio, scene.text).subscribe((result) => {
+      if (this.currentScene()?.id !== scene.id) {
+        return;
+      }
+
       if (!result.isSuccess || !result.value) {
         this.errorKey.set(this.evaluateErrorKeyFor(result.error?.code));
-        this.beginRepetitionRound(scene);
+        this.phase.set('ready');
         return;
       }
 
@@ -183,8 +301,15 @@ export class ShadowingSessionPage {
   }
 
   private afterFeedback(evaluation: PronunciationEvaluation, scene: Scene): void {
-    if (evaluation.shouldRepeat) {
-      this.beginRepetitionRound(scene);
+    if (this.currentScene()?.id !== scene.id) {
+      return;
+    }
+
+    const attempts = this.sceneAttemptCounts.get(scene.id) ?? 0;
+    const belowMinimumRepeats = attempts < this.repeatCount();
+
+    if (evaluation.shouldRepeat || belowMinimumRepeats) {
+      this.playCurrentClip(scene, false);
       return;
     }
 

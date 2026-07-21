@@ -4,6 +4,8 @@ interface YouTubePlayer {
   seekTo(seconds: number, allowSeekAhead: boolean): void;
   playVideo(): void;
   pauseVideo(): void;
+  setPlaybackRate(rate: number): void;
+  getCurrentTime(): number;
   destroy(): void;
 }
 
@@ -28,6 +30,7 @@ declare global {
 }
 
 const API_SCRIPT_URL = 'https://www.youtube.com/iframe_api';
+const POLL_INTERVAL_MS = 100;
 
 let apiLoadPromise: Promise<void> | null = null;
 
@@ -52,11 +55,15 @@ function loadYouTubeApi(): Promise<void> {
 export class YoutubePlayerService {
   private readonly zone = inject(NgZone);
   private player: YouTubePlayer | null = null;
-  private clipEndTimer: ReturnType<typeof setTimeout> | null = null;
+  private pollHandle: ReturnType<typeof setInterval> | null = null;
+  private clipEndSeconds: number | null = null;
+  private onTick: ((currentSeconds: number) => void) | null = null;
+  private onClipEnded: (() => void) | null = null;
 
   async createPlayer(host: HTMLElement, youTubeVideoId: string): Promise<void> {
     await loadYouTubeApi();
 
+    this.stopPolling();
     this.player?.destroy();
     this.player = null;
     host.innerHTML = '';
@@ -75,32 +82,70 @@ export class YoutubePlayerService {
     });
   }
 
-  playClip(startSeconds: number, endSeconds: number, onEnded: () => void): void {
+  playClip(startSeconds: number, endSeconds: number, onTick: (currentSeconds: number) => void, onEnded: () => void): void {
     if (!this.player) {
       return;
     }
 
-    this.clearClipEndTimer();
+    this.stopPolling();
     this.player.seekTo(startSeconds, true);
     this.player.playVideo();
 
-    const durationMs = Math.max(0, (endSeconds - startSeconds) * 1000);
-    this.clipEndTimer = setTimeout(() => {
-      this.player?.pauseVideo();
-      this.zone.run(() => onEnded());
-    }, durationMs);
+    this.clipEndSeconds = endSeconds;
+    this.onTick = onTick;
+    this.onClipEnded = onEnded;
+    this.pollHandle = setInterval(() => this.tick(), POLL_INTERVAL_MS);
+  }
+
+  resume(): void {
+    this.player?.playVideo();
+    if (this.clipEndSeconds !== null && this.pollHandle === null) {
+      this.pollHandle = setInterval(() => this.tick(), POLL_INTERVAL_MS);
+    }
+  }
+
+  pause(): void {
+    this.player?.pauseVideo();
+    if (this.pollHandle !== null) {
+      clearInterval(this.pollHandle);
+      this.pollHandle = null;
+    }
+  }
+
+  setPlaybackRate(rate: number): void {
+    this.player?.setPlaybackRate(rate);
   }
 
   destroy(): void {
-    this.clearClipEndTimer();
+    this.stopPolling();
     this.player?.destroy();
     this.player = null;
   }
 
-  private clearClipEndTimer(): void {
-    if (this.clipEndTimer) {
-      clearTimeout(this.clipEndTimer);
-      this.clipEndTimer = null;
+  private tick(): void {
+    if (!this.player || this.clipEndSeconds === null) {
+      return;
     }
+
+    const current = this.player.getCurrentTime();
+    this.onTick?.(current);
+
+    if (current >= this.clipEndSeconds) {
+      this.player.pauseVideo();
+      const callback = this.onClipEnded;
+      this.stopPolling();
+      this.zone.run(() => callback?.());
+    }
+  }
+
+  private stopPolling(): void {
+    if (this.pollHandle !== null) {
+      clearInterval(this.pollHandle);
+      this.pollHandle = null;
+    }
+
+    this.clipEndSeconds = null;
+    this.onTick = null;
+    this.onClipEnded = null;
   }
 }
