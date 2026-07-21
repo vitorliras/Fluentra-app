@@ -62,6 +62,7 @@ export class YoutubePlayerService {
   private clipEndSeconds: number | null = null;
   private onTick: ((currentSeconds: number) => void) | null = null;
   private onClipEnded: (() => void) | null = null;
+  private playbackRate = 1;
 
   async createPlayer(host: HTMLElement, youTubeVideoId: string): Promise<void> {
     await loadYouTubeApi();
@@ -91,6 +92,9 @@ export class YoutubePlayerService {
     iframe.style.inset = '0';
     iframe.style.width = '100%';
     iframe.style.height = '100%';
+    iframe.style.border = '0';
+    iframe.style.outline = 'none';
+    iframe.setAttribute('tabindex', '-1');
   }
 
   playClip(startSeconds: number, endSeconds: number, onTick: (currentSeconds: number) => void, onEnded: () => void): void {
@@ -101,6 +105,7 @@ export class YoutubePlayerService {
     this.stopPolling();
     this.player.seekTo(startSeconds, true);
     this.player.playVideo();
+    this.player.setPlaybackRate(this.playbackRate);
 
     this.clipEndSeconds = endSeconds;
     this.onTick = onTick;
@@ -110,6 +115,7 @@ export class YoutubePlayerService {
 
   resume(): void {
     this.player?.playVideo();
+    this.player?.setPlaybackRate(this.playbackRate);
     if (this.clipEndSeconds !== null && this.pollHandle === null) {
       this.pollHandle = setInterval(() => this.tick(), POLL_INTERVAL_MS);
     }
@@ -124,6 +130,7 @@ export class YoutubePlayerService {
   }
 
   setPlaybackRate(rate: number): void {
+    this.playbackRate = rate;
     this.player?.setPlaybackRate(rate);
   }
 

@@ -18,6 +18,8 @@ type SessionPhase =
   | 'idle'
   | 'importing'
   | 'comprehension'
+  | 'playing'
+  | 'waiting'
   | 'ready'
   | 'recording'
   | 'evaluating'
@@ -64,11 +66,12 @@ export class ShadowingSessionPage {
   protected readonly currentSceneIndex = signal(0);
   protected readonly phase = signal<SessionPhase>('idle');
   protected readonly comprehensionSecondsLeft = signal(COMPREHENSION_SECONDS);
+  protected readonly waitSecondsLeft = signal(0);
   protected readonly lastEvaluation = signal<PronunciationEvaluation | null>(null);
   protected readonly completedSceneIds = signal<Set<number>>(new Set());
   protected readonly errorKey = signal<string | null>(null);
   protected readonly isPlaying = signal(false);
-  protected readonly currentPlaybackSeconds = signal(0);
+  protected readonly currentPlaybackSeconds = signal(-1);
   protected readonly speed = signal(1);
   protected readonly repeatCount = signal(1);
   protected readonly waitModePercent = signal(50);
@@ -76,14 +79,29 @@ export class ShadowingSessionPage {
   protected readonly translationLanguage = signal('pt');
 
   private readonly seenSceneIds = new Set<number>();
-  private readonly sceneAttemptCounts = new Map<number, number>();
   private comprehensionInterval: ReturnType<typeof setInterval> | null = null;
+  private waitInterval: ReturnType<typeof setInterval> | null = null;
+  private listenRepetitionsRemaining = 0;
+  private hasEndedNaturally = false;
 
   protected readonly currentScene = computed<Scene | null>(() => this.scenes()[this.currentSceneIndex()] ?? null);
 
   protected readonly comprehensionPercent = computed(
     () => (this.comprehensionSecondsLeft() / COMPREHENSION_SECONDS) * 100,
   );
+
+  protected readonly waitTotalSeconds = computed(() => {
+    const scene = this.currentScene();
+    if (!scene) {
+      return 0;
+    }
+    return (scene.endSeconds - scene.startSeconds) * (this.waitModePercent() / 100);
+  });
+
+  protected readonly waitPercent = computed(() => {
+    const total = this.waitTotalSeconds();
+    return total <= 0 ? 100 : (this.waitSecondsLeft() / total) * 100;
+  });
 
   protected readonly highlightedWordIndex = computed<number>(() => {
     const scene = this.currentScene();
@@ -98,7 +116,7 @@ export class ShadowingSessionPage {
     }
 
     const elapsed = this.currentPlaybackSeconds() - scene.startSeconds;
-    if (elapsed < 0) {
+    if (elapsed < 0 || this.currentPlaybackSeconds() >= scene.endSeconds) {
       return -1;
     }
 
@@ -129,7 +147,6 @@ export class ShadowingSessionPage {
     this.scenes.set([]);
     this.completedSceneIds.set(new Set());
     this.seenSceneIds.clear();
-    this.sceneAttemptCounts.clear();
 
     this.gateway.importVideo({ youTubeVideoId: video.youTubeVideoId }).subscribe(async (result) => {
       if (!result.isSuccess || !result.value) {
@@ -169,9 +186,19 @@ export class ShadowingSessionPage {
   }
 
   protected onPlayPauseClick(): void {
+    const scene = this.currentScene();
+    if (!scene || this.isBusyPhase() || this.phase() === 'waiting') {
+      return;
+    }
+
     if (this.isPlaying()) {
       this.youtubePlayer.pause();
       this.isPlaying.set(false);
+      return;
+    }
+
+    if (this.hasEndedNaturally) {
+      this.startListenCycle(scene);
       return;
     }
 
@@ -190,7 +217,12 @@ export class ShadowingSessionPage {
       return;
     }
 
-    this.playCurrentClip(scene, this.phase() === 'comprehension');
+    if (this.phase() === 'comprehension') {
+      this.playClipOnce(scene, () => this.runComprehensionCountdown(scene));
+      return;
+    }
+
+    this.startListenCycle(scene);
   }
 
   protected onNextClick(): void {
@@ -244,13 +276,61 @@ export class ShadowingSessionPage {
     const firstExposure = !this.seenSceneIds.has(scene.id);
     this.seenSceneIds.add(scene.id);
 
-    this.playCurrentClip(scene, firstExposure);
+    if (firstExposure) {
+      this.phase.set('comprehension');
+      this.playClipOnce(scene, () => this.runComprehensionCountdown(scene));
+      return;
+    }
+
+    this.startListenCycle(scene);
   }
 
-  private playCurrentClip(scene: Scene, isComprehension: boolean): void {
+  private startListenCycle(scene: Scene): void {
     this.clearComprehensionInterval();
-    this.phase.set(isComprehension ? 'comprehension' : 'ready');
+    this.clearWaitInterval();
+    this.listenRepetitionsRemaining = this.repeatCount();
+    this.runListenRepetition(scene);
+  }
+
+  private runListenRepetition(scene: Scene): void {
+    this.phase.set('playing');
+    this.playClipOnce(scene, () => {
+      this.listenRepetitionsRemaining--;
+      if (this.listenRepetitionsRemaining > 0) {
+        this.runWaitTimer(scene);
+      } else {
+        this.phase.set('ready');
+      }
+    });
+  }
+
+  private runWaitTimer(scene: Scene): void {
+    this.phase.set('waiting');
+    const totalSeconds = this.waitTotalSeconds();
+    this.waitSecondsLeft.set(totalSeconds);
+    this.clearWaitInterval();
+
+    if (totalSeconds <= 0) {
+      this.runListenRepetition(scene);
+      return;
+    }
+
+    this.waitInterval = setInterval(() => {
+      const remaining = this.waitSecondsLeft() - 1;
+      this.waitSecondsLeft.set(Math.max(0, remaining));
+
+      if (remaining <= 0) {
+        this.clearWaitInterval();
+        this.runListenRepetition(scene);
+      }
+    }, 1000);
+  }
+
+  private playClipOnce(scene: Scene, onEnded: () => void): void {
+    this.clearComprehensionInterval();
+    this.clearWaitInterval();
     this.isPlaying.set(true);
+    this.hasEndedNaturally = false;
 
     this.youtubePlayer.playClip(
       scene.startSeconds,
@@ -258,11 +338,9 @@ export class ShadowingSessionPage {
       (currentSeconds) => this.currentPlaybackSeconds.set(currentSeconds),
       () => {
         this.isPlaying.set(false);
-        if (isComprehension) {
-          this.runComprehensionCountdown(scene);
-        } else {
-          this.phase.set('ready');
-        }
+        this.hasEndedNaturally = true;
+        this.currentPlaybackSeconds.set(scene.startSeconds - 1);
+        onEnded();
       },
     );
   }
@@ -277,7 +355,7 @@ export class ShadowingSessionPage {
 
       if (remaining <= 0) {
         this.clearComprehensionInterval();
-        this.playCurrentClip(scene, false);
+        this.startListenCycle(scene);
       }
     }, 1000);
   }
@@ -289,13 +367,19 @@ export class ShadowingSessionPage {
     }
   }
 
+  private clearWaitInterval(): void {
+    if (this.waitInterval !== null) {
+      clearInterval(this.waitInterval);
+      this.waitInterval = null;
+    }
+  }
+
   private onRecordingStopped(audio: Blob): void {
     const scene = this.currentScene();
     if (!scene) {
       return;
     }
 
-    this.sceneAttemptCounts.set(scene.id, (this.sceneAttemptCounts.get(scene.id) ?? 0) + 1);
     this.phase.set('evaluating');
 
     this.gateway.evaluatePronunciation(audio, scene.text).subscribe((result) => {
@@ -321,11 +405,8 @@ export class ShadowingSessionPage {
       return;
     }
 
-    const attempts = this.sceneAttemptCounts.get(scene.id) ?? 0;
-    const belowMinimumRepeats = attempts < this.repeatCount();
-
-    if (evaluation.shouldRepeat || belowMinimumRepeats) {
-      this.playCurrentClip(scene, false);
+    if (evaluation.shouldRepeat) {
+      this.startListenCycle(scene);
       return;
     }
 

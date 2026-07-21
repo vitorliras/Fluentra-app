@@ -125,6 +125,8 @@
       "importing": "Preparando o vídeo e separando as frases…",
       "comprehensionLabel": "Só ouça e leia — o microfone libera em instantes",
       "micDisabled": "Microfone desativado",
+      "playingLabel": "Ouça a frase",
+      "waitingLabel": "Prepare-se para repetir…",
       "readyLabel": "Quando estiver pronto, aperte gravar",
       "recordingLabel": "Gravando…",
       "recordButton": "Gravar",

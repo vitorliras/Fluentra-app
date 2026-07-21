@@ -125,6 +125,8 @@
       "importing": "Préparation de la vidéo et découpage en phrases…",
       "comprehensionLabel": "Écoute et lis simplement — le micro se débloque dans un instant",
       "micDisabled": "Micro désactivé",
+      "playingLabel": "Écoute la phrase",
+      "waitingLabel": "Prépare-toi à répéter…",
       "readyLabel": "Quand tu es prêt, appuie sur enregistrer",
       "recordingLabel": "Enregistrement…",
       "recordButton": "Enregistrer",

@@ -104,6 +104,13 @@
                 <span class="session__comprehension-fill" [style.width.%]="comprehensionPercent()"></span>
               </div>
             </div>
+          } @else if (phase() === 'waiting') {
+            <div class="session__comprehension">
+              <span>{{ languageService.t('shadowing.session.waitingLabel') }}</span>
+              <div class="session__comprehension-bar">
+                <span class="session__comprehension-fill" [style.width.%]="waitPercent()"></span>
+              </div>
+            </div>
           }
 
           <div class="session__controls">
@@ -191,6 +198,8 @@
             <span class="session__status" [class]="'session__status--' + phase()">
               @switch (phase()) {
                 @case ('comprehension') { {{ languageService.t('shadowing.session.micDisabled') }} }
+                @case ('playing') { {{ languageService.t('shadowing.session.playingLabel') }} }
+                @case ('waiting') { {{ languageService.t('shadowing.session.waitingLabel') }} }
                 @case ('ready') { {{ languageService.t('shadowing.session.readyLabel') }} }
                 @case ('recording') { {{ languageService.t('shadowing.session.recordingLabel') }} }
                 @case ('evaluating') { {{ languageService.t('shadowing.session.evaluatingLabel') }} }
