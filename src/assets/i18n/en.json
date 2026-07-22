@@ -71,7 +71,8 @@
       "loginUnexpected": "Couldn't log in. Please try again.",
       "emailAlreadyExists": "An account with this email already exists.",
       "usernameAlreadyExists": "This username is already taken.",
-      "registerUnexpected": "Couldn't create the account. Check your details and try again."
+      "registerUnexpected": "Couldn't create the account. Check your details and try again.",
+      "sessionExpired": "Your session has expired. Please log in again."
     }
   },
   "shell": {

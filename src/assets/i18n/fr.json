@@ -71,7 +71,8 @@
       "loginUnexpected": "Connexion impossible. Réessaie.",
       "emailAlreadyExists": "Un compte avec cet e-mail existe déjà.",
       "usernameAlreadyExists": "Ce nom d'utilisateur est déjà pris.",
-      "registerUnexpected": "Impossible de créer le compte. Vérifie les informations et réessaie."
+      "registerUnexpected": "Impossible de créer le compte. Vérifie les informations et réessaie.",
+      "sessionExpired": "Ta session a expiré. Reconnecte-toi."
     }
   },
   "shell": {

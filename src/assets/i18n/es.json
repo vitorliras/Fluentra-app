@@ -71,7 +71,8 @@
       "loginUnexpected": "No fue posible entrar. Inténtalo de nuevo.",
       "emailAlreadyExists": "Ya existe una cuenta con ese correo.",
       "usernameAlreadyExists": "Ese usuario ya está en uso.",
-      "registerUnexpected": "No fue posible crear la cuenta. Revisa los datos e inténtalo de nuevo."
+      "registerUnexpected": "No fue posible crear la cuenta. Revisa los datos e inténtalo de nuevo.",
+      "sessionExpired": "Tu sesión ha expirado. Inicia sesión de nuevo."
     }
   },
   "shell": {
