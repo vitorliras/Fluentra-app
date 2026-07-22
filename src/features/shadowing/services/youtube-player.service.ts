@@ -94,6 +94,7 @@ export class YoutubePlayerService {
     iframe.style.height = '100%';
     iframe.style.border = '0';
     iframe.style.outline = 'none';
+    iframe.style.pointerEvents = 'none';
     iframe.setAttribute('tabindex', '-1');
   }
 

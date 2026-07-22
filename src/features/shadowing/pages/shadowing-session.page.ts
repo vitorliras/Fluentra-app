@@ -338,9 +338,9 @@ export class ShadowingSessionPage {
 
   private runWaitTimer(scene: Scene): void {
     this.phase.set('waiting');
+    this.clearWaitInterval();
     const totalSeconds = this.waitTotalSeconds();
     this.waitSecondsLeft.set(totalSeconds);
-    this.clearWaitInterval();
 
     if (totalSeconds <= 0) {
       this.runListenRepetition(scene);
@@ -409,6 +409,7 @@ export class ShadowingSessionPage {
       clearInterval(this.waitInterval);
       this.waitInterval = null;
     }
+    this.waitSecondsLeft.set(0);
   }
 
   private onRecordingStopped(audio: Blob): void {
