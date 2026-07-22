@@ -29,8 +29,8 @@ type SessionPhase =
 const COMPREHENSION_SECONDS = 5;
 const FEEDBACK_DISPLAY_MS = 2500;
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5];
-const REPEAT_COUNT_OPTIONS = [1, 2, 3, 4];
-const WAIT_MODE_OPTIONS = [0, 25, 50, 75, 100];
+const REPEAT_COUNT_OPTIONS = [1, 2, 3, 4, 5, 6];
+const WAIT_MODE_OPTIONS = [0, 25, 50, 75, 100, 125, 150];
 const TRANSLATION_LANGUAGE_OPTIONS = ['pt', 'es', 'fr'];
 
 @Component({
@@ -73,7 +73,7 @@ export class ShadowingSessionPage {
   protected readonly isPlaying = signal(false);
   protected readonly currentPlaybackSeconds = signal(-1);
   protected readonly speed = signal(1);
-  protected readonly repeatCount = signal(1);
+  protected readonly repeatCount = signal(3);
   protected readonly waitModePercent = signal(75);
   protected readonly showTranslation = signal(true);
   protected readonly translationLanguage = signal('pt');
