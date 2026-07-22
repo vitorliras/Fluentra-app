@@ -77,7 +77,7 @@ export class ShadowingSessionPage {
   protected readonly speed = signal(1);
   protected readonly repeatCount = signal(3);
   protected readonly waitModePercent = signal(75);
-  protected readonly showTranslation = signal(true);
+  protected readonly showTranslation = signal(false);
   protected readonly translationLanguage = signal('pt');
 
   private readonly seenSceneIds = new Set<number>();
