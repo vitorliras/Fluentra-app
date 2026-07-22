@@ -383,8 +383,8 @@ export class ShadowingSessionPage {
   }
 
   private runComprehensionCountdown(scene: Scene): void {
-    this.comprehensionSecondsLeft.set(COMPREHENSION_SECONDS);
     this.clearComprehensionInterval();
+    this.comprehensionSecondsLeft.set(COMPREHENSION_SECONDS);
 
     this.comprehensionInterval = setInterval(() => {
       const remaining = this.comprehensionSecondsLeft() - 1;
@@ -402,6 +402,7 @@ export class ShadowingSessionPage {
       clearInterval(this.comprehensionInterval);
       this.comprehensionInterval = null;
     }
+    this.comprehensionSecondsLeft.set(0);
   }
 
   private clearWaitInterval(): void {
