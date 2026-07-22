@@ -313,7 +313,7 @@
   height: 100%;
   background: var(--color-primary);
   border-radius: var(--radius-full);
-  transition: width 1s linear;
+  transition: width 100ms linear;
 }
 
 .session__controls {
@@ -406,6 +406,13 @@
   &--recording {
     animation: session-status-pulse 1.2s ease-in-out infinite;
   }
+}
+
+.session__repeat-progress {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-foreground-muted);
+  white-space: nowrap;
 }
 
 .session__feedback {

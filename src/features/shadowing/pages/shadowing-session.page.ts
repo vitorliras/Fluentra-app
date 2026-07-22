@@ -80,10 +80,11 @@ export class ShadowingSessionPage {
   protected readonly showTranslation = signal(false);
   protected readonly translationLanguage = signal('pt');
 
+  protected readonly repeatsRemaining = signal(0);
+
   private readonly seenSceneIds = new Set<number>();
   private comprehensionInterval: ReturnType<typeof setInterval> | null = null;
   private waitInterval: ReturnType<typeof setInterval> | null = null;
-  private listenRepetitionsRemaining = 0;
   private hasEndedNaturally = false;
 
   protected readonly currentScene = computed<Scene | null>(() => this.scenes()[this.currentSceneIndex()] ?? null);
@@ -104,6 +105,13 @@ export class ShadowingSessionPage {
   protected readonly waitPercent = computed(() => {
     const total = this.waitTotalSeconds();
     return total <= 0 ? 100 : (this.waitSecondsLeft() / total) * 100;
+  });
+
+  protected readonly repeatsCompleted = computed(() => this.repeatCount() - this.repeatsRemaining());
+
+  protected readonly showRepeatProgress = computed(() => {
+    const phase = this.phase();
+    return phase === 'playing' || phase === 'waiting';
   });
 
   protected readonly highlightedWordIndex = computed<number>(() => {
@@ -320,15 +328,15 @@ export class ShadowingSessionPage {
   private startListenCycle(scene: Scene): void {
     this.clearComprehensionInterval();
     this.clearWaitInterval();
-    this.listenRepetitionsRemaining = this.repeatCount();
+    this.repeatsRemaining.set(this.repeatCount());
     this.runListenRepetition(scene);
   }
 
   private runListenRepetition(scene: Scene): void {
     this.phase.set('playing');
     this.playClipOnce(scene, () => {
-      this.listenRepetitionsRemaining--;
-      if (this.listenRepetitionsRemaining > 0) {
+      this.repeatsRemaining.update((value) => value - 1);
+      if (this.repeatsRemaining() > 0) {
         this.runWaitTimer(scene);
       } else {
         this.phase.set('ready');

@@ -175,6 +175,12 @@
                 {{ languageService.t('shadowing.session.recordButton') }}
               }
             </button>
+
+            @if (showRepeatProgress()) {
+              <span class="session__repeat-progress">
+                {{ languageService.t('shadowing.session.repeatProgress', { current: repeatsCompleted().toString(), total: repeatCount().toString() }) }}
+              </span>
+            }
           </div>
         } @else if (phase() === 'completed') {
           <p class="session__placeholder">{{ languageService.t('shadowing.session.completedLabel') }}</p>

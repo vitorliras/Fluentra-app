@@ -134,6 +134,7 @@
       "restart": "Recommencer la phrase",
       "next": "Phrase suivante",
       "repeatCount": "Répétitions",
+      "repeatProgress": "Répétition {current} sur {total}",
       "waitMode": "Temps d'attente",
       "hideTranslation": "Masquer la traduction",
       "showTranslation": "Afficher la traduction",
