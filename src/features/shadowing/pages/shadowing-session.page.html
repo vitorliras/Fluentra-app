@@ -85,9 +85,9 @@
             </button>
 
             @if (showTranslation()) {
-              <select class="session__select session__select--small" [value]="translationLanguage()" (change)="onTranslationLanguageChange($any($event.target).value)">
+              <select class="session__select session__select--small" (change)="onTranslationLanguageChange($any($event.target).value)">
                 @for (lang of translationLanguageOptions; track lang) {
-                  <option [value]="lang">{{ languageService.t('shadowing.session.translationLang.' + lang) }}</option>
+                  <option [value]="lang" [selected]="lang === translationLanguage()">{{ languageService.t('shadowing.session.translationLang.' + lang) }}</option>
                 }
               </select>
             }
@@ -136,21 +136,21 @@
               </svg>
             </button>
 
-            <select class="session__select" [value]="speed()" (change)="onSpeedChange($any($event.target).value)">
+            <select class="session__select" (change)="onSpeedChange($any($event.target).value)">
               @for (option of speedOptions; track option) {
-                <option [value]="option">{{ option }}x</option>
+                <option [value]="option" [selected]="option === speed()">{{ option }}x</option>
               }
             </select>
 
-            <select class="session__select" [value]="repeatCount()" (change)="onRepeatCountChange($any($event.target).value)">
+            <select class="session__select" (change)="onRepeatCountChange($any($event.target).value)">
               @for (option of repeatCountOptions; track option) {
-                <option [value]="option">{{ languageService.t('shadowing.session.repeatCount') }} ×{{ option }}</option>
+                <option [value]="option" [selected]="option === repeatCount()">{{ languageService.t('shadowing.session.repeatCount') }} ×{{ option }}</option>
               }
             </select>
 
-            <select class="session__select" [value]="waitModePercent()" (change)="onWaitModeChange($any($event.target).value)">
+            <select class="session__select" (change)="onWaitModeChange($any($event.target).value)">
               @for (option of waitModeOptions; track option) {
-                <option [value]="option">{{ languageService.t('shadowing.session.waitMode') }} +{{ option }}%</option>
+                <option [value]="option" [selected]="option === waitModePercent()">{{ languageService.t('shadowing.session.waitMode') }} +{{ option }}%</option>
               }
             </select>
 
