@@ -1,3 +1,5 @@
+import { PronunciationEvaluation } from './pronunciation-evaluation.model';
+
 export interface Scene {
   id: number;
   text: string;
@@ -5,6 +7,8 @@ export interface Scene {
   startSeconds: number;
   endSeconds: number;
   sequenceOrder: number;
+  completed: boolean;
+  lastEvaluation: PronunciationEvaluation | null;
 }
 
 export interface ImportedVideo {

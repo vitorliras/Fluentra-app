@@ -8,6 +8,7 @@ import { ShellLayoutService } from '../../../core/services/shell-layout.service'
 import { VideoSearchResult } from '../data-access/models/video-search-result.model';
 import { Scene } from '../data-access/models/video-import.model';
 import { PronunciationEvaluation } from '../data-access/models/pronunciation-evaluation.model';
+import { ShadowingHistoryItem } from '../data-access/models/shadowing-history.model';
 import { ShadowingGateway } from '../data-access/shadowing.gateway';
 import { HistoryDropdownComponent } from '../components/history-dropdown/history-dropdown.component';
 import { VideoSearchBarComponent } from '../components/video-search-bar/video-search-bar.component';
@@ -28,6 +29,7 @@ type SessionPhase =
 
 const COMPREHENSION_SECONDS = 5;
 const FEEDBACK_DISPLAY_MS = 2500;
+const WAIT_TICK_MS = 100;
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5];
 const REPEAT_COUNT_OPTIONS = [1, 2, 3, 4, 5, 6];
 const WAIT_MODE_OPTIONS = [0, 25, 50, 75, 100, 125, 150];
@@ -95,7 +97,8 @@ export class ShadowingSessionPage {
     if (!scene) {
       return 0;
     }
-    return (scene.endSeconds - scene.startSeconds) * (this.waitModePercent() / 100);
+    const sceneDuration = scene.endSeconds - scene.startSeconds;
+    return sceneDuration * (1 + this.waitModePercent() / 100);
   });
 
   protected readonly waitPercent = computed(() => {
@@ -140,6 +143,18 @@ export class ShadowingSessionPage {
     this.translationLanguage.set(value);
   }
 
+  protected onHistorySelected(item: ShadowingHistoryItem): void {
+    this.onVideoSelected({
+      youTubeVideoId: item.youTubeVideoId,
+      title: item.title,
+      thumbnailUrl: item.thumbnailUrl,
+      durationSeconds: 0,
+      viewCount: 0,
+      likeCount: 0,
+      popularityTier: 'Pequena',
+    });
+  }
+
   protected async onVideoSelected(video: VideoSearchResult): Promise<void> {
     this.selectedVideo.set(video);
     this.phase.set('importing');
@@ -156,7 +171,13 @@ export class ShadowingSessionPage {
       }
 
       this.scenes.set(result.value.scenes);
-      this.currentSceneIndex.set(0);
+
+      const completedIds = new Set(result.value.scenes.filter((s) => s.completed).map((s) => s.id));
+      this.completedSceneIds.set(completedIds);
+      completedIds.forEach((id) => this.seenSceneIds.add(id));
+
+      const firstIncompleteIndex = result.value.scenes.findIndex((s) => !s.completed);
+      this.currentSceneIndex.set(firstIncompleteIndex === -1 ? 0 : firstIncompleteIndex);
 
       try {
         await this.youtubePlayer.createPlayer(this.videoFrameHost.nativeElement, video.youTubeVideoId);
@@ -271,7 +292,7 @@ export class ShadowingSessionPage {
       return;
     }
 
-    this.lastEvaluation.set(null);
+    this.lastEvaluation.set(scene.lastEvaluation);
     this.errorKey.set(null);
     const firstExposure = !this.seenSceneIds.has(scene.id);
     this.seenSceneIds.add(scene.id);
@@ -315,15 +336,20 @@ export class ShadowingSessionPage {
       return;
     }
 
+    const startedAt = Date.now();
     this.waitInterval = setInterval(() => {
-      const remaining = this.waitSecondsLeft() - 1;
-      this.waitSecondsLeft.set(Math.max(0, remaining));
+      const elapsedSeconds = (Date.now() - startedAt) / 1000;
+      const remaining = totalSeconds - elapsedSeconds;
 
       if (remaining <= 0) {
+        this.waitSecondsLeft.set(0);
         this.clearWaitInterval();
         this.runListenRepetition(scene);
+        return;
       }
-    }, 1000);
+
+      this.waitSecondsLeft.set(remaining);
+    }, WAIT_TICK_MS);
   }
 
   private playClipOnce(scene: Scene, onEnded: () => void): void {
@@ -382,7 +408,7 @@ export class ShadowingSessionPage {
 
     this.phase.set('evaluating');
 
-    this.gateway.evaluatePronunciation(audio, scene.text).subscribe((result) => {
+    this.gateway.evaluatePronunciation(audio, scene.text, scene.id).subscribe((result) => {
       if (this.currentScene()?.id !== scene.id) {
         return;
       }
@@ -394,10 +420,17 @@ export class ShadowingSessionPage {
       }
 
       this.lastEvaluation.set(result.value);
+      this.updateSceneProgress(scene.id, result.value);
       this.phase.set('feedback');
 
       setTimeout(() => this.afterFeedback(result.value!, scene), FEEDBACK_DISPLAY_MS);
     });
+  }
+
+  private updateSceneProgress(sceneId: number, evaluation: PronunciationEvaluation): void {
+    this.scenes.update((scenes) =>
+      scenes.map((s) => (s.id === sceneId ? { ...s, completed: !evaluation.shouldRepeat, lastEvaluation: evaluation } : s)),
+    );
   }
 
   private afterFeedback(evaluation: PronunciationEvaluation, scene: Scene): void {

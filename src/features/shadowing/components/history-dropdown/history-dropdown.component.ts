@@ -1,30 +1,7 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, output, signal } from '@angular/core';
 import { LanguageService } from '../../../../core/services/language.service';
-
-export interface HistoryEntry {
-  youTubeVideoId: string;
-  title: string;
-  thumbnailUrl: string;
-  completedPhrases: number;
-  totalPhrases: number;
-}
-
-const HISTORY_ENTRIES: HistoryEntry[] = [
-  {
-    youTubeVideoId: 'history-1',
-    title: 'Shadowing for Daily Life',
-    thumbnailUrl: '',
-    completedPhrases: 1,
-    totalPhrases: 6,
-  },
-  {
-    youTubeVideoId: 'history-2',
-    title: 'Everyday English Conversations for Beginners',
-    thumbnailUrl: '',
-    completedPhrases: 4,
-    totalPhrases: 9,
-  },
-];
+import { ShadowingGateway } from '../../data-access/shadowing.gateway';
+import { ShadowingHistoryItem } from '../../data-access/models/shadowing-history.model';
 
 @Component({
   selector: 'app-history-dropdown',
@@ -34,17 +11,45 @@ const HISTORY_ENTRIES: HistoryEntry[] = [
 })
 export class HistoryDropdownComponent {
   protected readonly languageService = inject(LanguageService);
+  private readonly gateway = inject(ShadowingGateway);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   protected readonly open = signal(false);
-  protected readonly items = HISTORY_ENTRIES.filter((entry) => entry.completedPhrases > 0);
+  protected readonly isLoading = signal(false);
+  protected readonly items = signal<ShadowingHistoryItem[]>([]);
+  private loaded = false;
+
+  readonly videoSelected = output<ShadowingHistoryItem>();
 
   protected toggle(): void {
-    this.open.update((value) => !value);
+    const nextOpen = !this.open();
+    this.open.set(nextOpen);
+
+    if (nextOpen && !this.loaded) {
+      this.loadHistory();
+    }
   }
 
-  protected progressPercent(item: HistoryEntry): number {
-    return (item.completedPhrases / item.totalPhrases) * 100;
+  protected selectItem(item: ShadowingHistoryItem): void {
+    this.open.set(false);
+    this.videoSelected.emit(item);
+  }
+
+  protected progressPercent(item: ShadowingHistoryItem): number {
+    return (item.completedScenes / item.totalScenes) * 100;
+  }
+
+  private loadHistory(): void {
+    this.isLoading.set(true);
+
+    this.gateway.getHistory().subscribe((result) => {
+      this.isLoading.set(false);
+
+      if (result.isSuccess && result.value) {
+        this.loaded = true;
+        this.items.set(result.value.items);
+      }
+    });
   }
 
   @HostListener('document:click', ['$event'])

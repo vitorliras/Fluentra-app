@@ -13,11 +13,13 @@
 
 @if (open()) {
   <div class="history-dropdown__menu">
-    @if (items.length === 0) {
+    @if (isLoading()) {
+      <p class="history-dropdown__empty">{{ languageService.t('shadowing.search.loading') }}</p>
+    } @else if (items().length === 0) {
       <p class="history-dropdown__empty">{{ languageService.t('shadowing.historyEmpty') }}</p>
     } @else {
-      @for (item of items; track item.youTubeVideoId) {
-        <div class="history-dropdown__item">
+      @for (item of items(); track item.youTubeVideoId) {
+        <button type="button" class="history-dropdown__item" (click)="selectItem(item)">
           <span class="history-dropdown__thumb">
             @if (item.thumbnailUrl) {
               <img [src]="item.thumbnailUrl" alt="" />
@@ -34,10 +36,10 @@
               <span class="history-dropdown__progress-bar">
                 <span class="history-dropdown__progress-fill" [style.width.%]="progressPercent(item)"></span>
               </span>
-              <span class="history-dropdown__progress-count">{{ item.completedPhrases }}/{{ item.totalPhrases }}</span>
+              <span class="history-dropdown__progress-count">{{ item.completedScenes }}/{{ item.totalScenes }}</span>
             </span>
           </span>
-        </div>
+        </button>
       }
     }
   </div>

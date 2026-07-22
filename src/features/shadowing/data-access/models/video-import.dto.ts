@@ -1,3 +1,5 @@
+import { EvaluatePronunciationResponseDto } from './pronunciation-evaluation.dto';
+
 export interface SceneItemDto {
   id: number;
   text: string;
@@ -5,6 +7,8 @@ export interface SceneItemDto {
   startSeconds: number;
   endSeconds: number;
   sequenceOrder: number;
+  completed: boolean;
+  lastEvaluation: EvaluatePronunciationResponseDto | null;
 }
 
 export interface ImportVideoResponseDto {

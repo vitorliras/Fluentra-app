@@ -29,7 +29,7 @@
 
   <div class="session__search-row">
     <app-video-search-bar (videoSelected)="onVideoSelected($event)" />
-    <app-history-dropdown />
+    <app-history-dropdown (videoSelected)="onHistorySelected($event)" />
   </div>
 
   @if (scenes().length > 0) {

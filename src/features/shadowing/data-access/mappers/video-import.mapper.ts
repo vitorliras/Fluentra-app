@@ -1,3 +1,4 @@
+import { toPronunciationEvaluation } from './pronunciation-evaluation.mapper';
 import { ImportVideoResponseDto, SceneItemDto } from '../models/video-import.dto';
 import { ImportedVideo, Scene } from '../models/video-import.model';
 
@@ -9,6 +10,8 @@ export function toScene(dto: SceneItemDto): Scene {
     startSeconds: dto.startSeconds,
     endSeconds: dto.endSeconds,
     sequenceOrder: dto.sequenceOrder,
+    completed: dto.completed,
+    lastEvaluation: dto.lastEvaluation ? toPronunciationEvaluation(dto.lastEvaluation) : null,
   };
 }
 

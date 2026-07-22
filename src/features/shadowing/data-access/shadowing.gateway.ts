@@ -7,6 +7,7 @@ import { Result } from '../../../shared/results/result';
 import { toSearchVideosResult, toVideoSearchResult } from './mappers/video-search-result.mapper';
 import { toImportedVideo } from './mappers/video-import.mapper';
 import { toPronunciationEvaluation } from './mappers/pronunciation-evaluation.mapper';
+import { toShadowingHistoryResult } from './mappers/shadowing-history.mapper';
 import { GetVideoByUrlRequestDto, SearchVideosRequestDto } from './models/search-videos-request.dto';
 import { SearchVideosResponseDto, VideoSearchResultItemDto } from './models/video-search-result.dto';
 import { SearchVideosResult, VideoSearchResult } from './models/video-search-result.model';
@@ -14,6 +15,8 @@ import { ImportVideoRequestDto, ImportVideoResponseDto } from './models/video-im
 import { ImportedVideo } from './models/video-import.model';
 import { EvaluatePronunciationResponseDto } from './models/pronunciation-evaluation.dto';
 import { PronunciationEvaluation } from './models/pronunciation-evaluation.model';
+import { ShadowingHistoryResponseDto } from './models/shadowing-history.dto';
+import { ShadowingHistoryResult } from './models/shadowing-history.model';
 
 interface ApiErrorBody {
   code?: string;
@@ -45,14 +48,22 @@ export class ShadowingGateway {
     );
   }
 
-  evaluatePronunciation(audio: Blob, targetText: string): Observable<Result<PronunciationEvaluation>> {
+  evaluatePronunciation(audio: Blob, targetText: string, sceneId: number): Observable<Result<PronunciationEvaluation>> {
     const formData = new FormData();
     formData.append('audio', audio, 'recording.wav');
     formData.append('targetText', targetText);
+    formData.append('sceneId', String(sceneId));
 
     return this.http.post<EvaluatePronunciationResponseDto>(`${this.apiUrl()}/shadowing/pronunciation/evaluate`, formData).pipe(
       map((dto) => Result.success(toPronunciationEvaluation(dto))),
       catchError((error: HttpErrorResponse) => of(Result.failure<PronunciationEvaluation>(this.toResultError(error)))),
+    );
+  }
+
+  getHistory(): Observable<Result<ShadowingHistoryResult>> {
+    return this.http.get<ShadowingHistoryResponseDto>(`${this.apiUrl()}/shadowing/videos/history`).pipe(
+      map((dto) => Result.success(toShadowingHistoryResult(dto))),
+      catchError((error: HttpErrorResponse) => of(Result.failure<ShadowingHistoryResult>(this.toResultError(error)))),
     );
   }
 
