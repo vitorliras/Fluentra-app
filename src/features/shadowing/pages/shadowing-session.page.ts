@@ -363,7 +363,11 @@ export class ShadowingSessionPage {
       if (remaining <= 0) {
         this.waitSecondsLeft.set(0);
         this.clearWaitInterval();
-        this.runListenRepetition(scene);
+        // Deferred one frame so the browser actually paints the bar at 0% before
+        // the phase change removes it from the DOM - otherwise the last frame the
+        // user sees is from the previous tick (still a few % full), and the video
+        // restart looks premature even though the underlying timing is correct.
+        requestAnimationFrame(() => this.runListenRepetition(scene));
         return;
       }
 
@@ -400,7 +404,7 @@ export class ShadowingSessionPage {
 
       if (remaining <= 0) {
         this.clearComprehensionInterval();
-        this.startListenCycle(scene);
+        requestAnimationFrame(() => this.startListenCycle(scene));
       }
     }, 1000);
   }
