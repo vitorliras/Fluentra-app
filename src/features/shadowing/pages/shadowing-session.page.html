@@ -71,7 +71,11 @@
         } @else if (currentScene(); as scene) {
           <p class="session__phrase-text">
             @for (word of sceneWords(scene); track $index; let last = $last) {
-              <span class="session__word" [class.session__word--active]="$index === highlightedWordIndex()">{{ word }}</span>{{ last ? '' : ' ' }}
+              <span
+                class="session__word"
+                [class.session__word--active]="$index === highlightedWordIndex()"
+                (click)="onWordClick(word)"
+              >{{ word }}</span>{{ last ? '' : ' ' }}
             }
           </p>
 

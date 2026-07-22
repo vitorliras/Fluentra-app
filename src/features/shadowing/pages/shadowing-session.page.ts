@@ -131,6 +131,17 @@ export class ShadowingSessionPage {
     return scene.text.split(' ').filter(Boolean);
   }
 
+  protected onWordClick(word: string): void {
+    if (!('speechSynthesis' in window)) {
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(word.replace(/[.,!?;:"'()]/g, ''));
+    utterance.lang = 'en-US';
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+
   protected sceneTranslation(scene: Scene): string | null {
     return scene.translations[this.translationLanguage()] ?? null;
   }

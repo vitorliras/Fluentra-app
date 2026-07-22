@@ -279,6 +279,11 @@
 .session__word {
   transition: color var(--duration-fast) ease-out, background-color var(--duration-fast) ease-out;
   border-radius: var(--radius-sm);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-secondary);
+  }
 
   &--active {
     color: var(--color-primary);
